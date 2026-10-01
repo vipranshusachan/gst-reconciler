@@ -18,8 +18,8 @@ def compute_string_similarity(str1: str, str2: str) -> float:
     if not str1 or not str2:
         return 0.0
 
-    s1 = str(str1).strip().upper()
-    s2 = str(str2).strip().upper()
+    s1 = str1.strip().upper()
+    s2 = str2.strip().upper()
 
     if s1 == s2:
         return 1.0

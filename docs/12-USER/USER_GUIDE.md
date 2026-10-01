@@ -6,6 +6,24 @@ GST Reconciler is an intuitive Windows desktop application designed to eliminate
 
 ---
 
+## ⚡ 1-Minute Installation (Easy for Everyone)
+
+### 1. Download & Install
+1. Head to [GitHub Releases](https://github.com/vipranshusachan/gst-reconciler/releases).
+2. Download `GSTReconciler-Setup-v1.0.0.exe` (or the portable zip version).
+3. Run the installer and click **Next** until complete.
+4. Launch **GST Reconciler** from your Desktop or Start Menu.
+
+> **Note for Windows SmartScreen**: If Windows displays "Windows protected your PC", simply click **"More info"** and then **"Run anyway"**. The application is 100% open-source, runs completely offline, and contains zero adware or trackers.
+
+### 2. Instant Test with Demo Data
+Want to test the app without preparing your own files?
+1. Open GST Reconciler.
+2. In the top bar or Dashboard, click **"Load Demo Sample"**.
+3. Watch the app instantly populate the Dashboard, reconcile sample GSTR-2B and Purchase Register data, and explore real discrepancy examples!
+
+---
+
 ## Key Features Walkthrough
 
 ### 1. The Executive Dashboard

@@ -14,7 +14,7 @@ def normalize_gstin(raw_gstin: str | None) -> str:
     """Strip whitespace, punctuation, and uppercase raw GSTIN."""
     if not raw_gstin:
         return ""
-    clean = re.sub(r"[\s\-_/.]+", "", str(raw_gstin).strip().upper())
+    clean = re.sub(r"[\s\-_/.]+", "", raw_gstin.strip().upper())
     return clean
 
 

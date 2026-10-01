@@ -108,12 +108,12 @@ class DashboardView(QWidget):
 
         self.table_breakdown = QTableWidget(5, 4)
         self.table_breakdown.setHorizontalHeaderLabels(["Category", "Invoice Count", "Percentage", "Financial Exposure"])
-        self.table_breakdown.horizontalHeader().setSectionResizeMode(0, QHeaderView.Stretch)
-        self.table_breakdown.horizontalHeader().setSectionResizeMode(1, QHeaderView.ResizeToContents)
-        self.table_breakdown.horizontalHeader().setSectionResizeMode(2, QHeaderView.ResizeToContents)
-        self.table_breakdown.horizontalHeader().setSectionResizeMode(3, QHeaderView.Stretch)
+        self.table_breakdown.horizontalHeader().setSectionResizeMode(0, QHeaderView.ResizeMode.Stretch)
+        self.table_breakdown.horizontalHeader().setSectionResizeMode(1, QHeaderView.ResizeMode.ResizeToContents)
+        self.table_breakdown.horizontalHeader().setSectionResizeMode(2, QHeaderView.ResizeMode.ResizeToContents)
+        self.table_breakdown.horizontalHeader().setSectionResizeMode(3, QHeaderView.ResizeMode.Stretch)
         self.table_breakdown.verticalHeader().setVisible(False)
-        self.table_breakdown.setEditTriggers(QTableWidget.NoEditTriggers)
+        self.table_breakdown.setEditTriggers(QTableWidget.EditTrigger.NoEditTriggers)
 
         main_layout.addWidget(self.table_breakdown)
 
@@ -151,5 +151,5 @@ class DashboardView(QWidget):
             for c_idx, val in enumerate(row):
                 item = QTableWidgetItem(val)
                 if c_idx in (1, 2):
-                    item.setTextAlignment(Qt.AlignCenter)
+                    item.setTextAlignment(int(Qt.AlignmentFlag.AlignCenter))
                 self.table_breakdown.setItem(r_idx, c_idx, item)

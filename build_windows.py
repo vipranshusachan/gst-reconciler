@@ -1,19 +1,15 @@
-"""Windows Standalone PyInstaller Executable Build Script."""
-
+import subprocess
 import sys
 from pathlib import Path
 
 def build():
-    try:
-        import PyInstaller.__main__
-    except ImportError:
-        print("PyInstaller is not installed. Install with: pip install pyinstaller")
-        sys.exit(1)
-
     root = Path(__file__).parent.resolve()
     entry_point = root / "app" / "ui" / "app.py"
 
     args = [
+        sys.executable,
+        "-m",
+        "PyInstaller",
         str(entry_point),
         "--name=GSTReconciler",
         "--noconfirm",
@@ -27,7 +23,11 @@ def build():
 
     print("Building GST Reconciler standalone Windows executable with PyInstaller...")
     print(f"Command arguments: {' '.join(args)}")
-    PyInstaller.__main__.run(args)
+    result = subprocess.run(args)
+    if result.returncode != 0:
+        print("\nPyInstaller build failed or PyInstaller is not installed.")
+        print("Install PyInstaller with: pip install pyinstaller")
+        sys.exit(result.returncode)
     print("\nPyInstaller build completed successfully. Output located in /dist/GSTReconciler/")
 
 

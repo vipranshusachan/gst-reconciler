@@ -2,7 +2,7 @@
 
 from decimal import Decimal
 from typing import Any, List, Optional
-from PySide6.QtCore import QAbstractTableModel, QModelIndex, Qt
+from PySide6.QtCore import QAbstractTableModel, QModelIndex, QPersistentModelIndex, Qt
 from PySide6.QtGui import QColor
 
 from app.domain.enums import MatchStatus
@@ -34,18 +34,18 @@ class ReconciledTableModel(QAbstractTableModel):
         self._all_records: List[MatchRecord] = matches or []
         self._filtered_records: List[MatchRecord] = list(self._all_records)
 
-    def rowCount(self, parent=QModelIndex()) -> int:
+    def rowCount(self, parent: QModelIndex | QPersistentModelIndex = QModelIndex()) -> int:
         return len(self._filtered_records)
 
-    def columnCount(self, parent=QModelIndex()) -> int:
+    def columnCount(self, parent: QModelIndex | QPersistentModelIndex = QModelIndex()) -> int:
         return len(COLUMNS)
 
-    def headerData(self, section: int, orientation: Qt.Orientation, role: int = Qt.ItemDataRole.DisplayRole) -> Any:
-        if orientation == Qt.Orientation.Horizontal and role == Qt.ItemDataRole.DisplayRole:
+    def headerData(self, section: int, orientation: Qt.Orientation, role: int = int(Qt.ItemDataRole.DisplayRole)) -> Any:
+        if orientation == Qt.Orientation.Horizontal and role == int(Qt.ItemDataRole.DisplayRole):
             return COLUMNS[section]
         return None
 
-    def data(self, index: QModelIndex, role: int = Qt.ItemDataRole.DisplayRole) -> Any:
+    def data(self, index: QModelIndex | QPersistentModelIndex, role: int = int(Qt.ItemDataRole.DisplayRole)) -> Any:
         if not index.isValid() or index.row() >= len(self._filtered_records):
             return None
 
@@ -55,7 +55,7 @@ class ReconciledTableModel(QAbstractTableModel):
         ra = m.record_a
         rb = m.record_b
 
-        if role == Qt.ItemDataRole.DisplayRole:
+        if role == int(Qt.ItemDataRole.DisplayRole):
             if col == 0:
                 return m.match_status.value
             elif col == 1:
@@ -88,7 +88,7 @@ class ReconciledTableModel(QAbstractTableModel):
             elif col == 14:
                 return m.explanation
 
-        elif role == Qt.ItemDataRole.TextAlignmentRole:
+        elif role == int(Qt.ItemDataRole.TextAlignmentRole):
             # Right-align numeric columns
             if col in (7, 8, 9, 10, 11, 12):
                 return int(Qt.AlignmentFlag.AlignRight | Qt.AlignmentFlag.AlignVCenter)
@@ -97,7 +97,7 @@ class ReconciledTableModel(QAbstractTableModel):
             else:
                 return int(Qt.AlignmentFlag.AlignLeft | Qt.AlignmentFlag.AlignVCenter)
 
-        elif role == Qt.ItemDataRole.ForegroundRole:
+        elif role == int(Qt.ItemDataRole.ForegroundRole):
             # Color coding for status and differences
             if col == 0:
                 if m.match_status == MatchStatus.MATCHED:
@@ -142,10 +142,11 @@ class ReconciledTableModel(QAbstractTableModel):
             for m in filtered:
                 ra = m.record_a
                 rb = m.record_b
-                gstin = (rb.supplier_gstin if rb else (ra.supplier_gstin if ra else "")).lower()
-                name = (rb.supplier_name if rb and rb.supplier_name else (ra.supplier_name if ra else "")).lower()
-                inv_a = (ra.raw_invoice_number if ra else "").lower()
-                inv_b = (rb.raw_invoice_number if rb else "").lower()
+                gstin = (rb.supplier_gstin if (rb and rb.supplier_gstin) else (ra.supplier_gstin if (ra and ra.supplier_gstin) else "")).lower()
+                name_str = (rb.supplier_name if (rb and rb.supplier_name) else (ra.supplier_name if (ra and ra.supplier_name) else "")) or ""
+                name = name_str.lower()
+                inv_a = (ra.raw_invoice_number if (ra and ra.raw_invoice_number) else "").lower()
+                inv_b = (rb.raw_invoice_number if (rb and rb.raw_invoice_number) else "").lower()
                 if q in gstin or q in name or q in inv_a or q in inv_b:
                     res.append(m)
             filtered = res

@@ -12,7 +12,7 @@
 
 ```bash
 # Clone the repository
-git clone https://github.com/opensource/gst-reconciler.git
+git clone https://github.com/vipranshusachan/gst-reconciler.git
 cd gst-reconciler
 
 # Create and activate virtual environment

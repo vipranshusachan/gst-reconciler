@@ -19,7 +19,7 @@ All contributors and participants are expected to adhere to our [Code of Conduct
 
 2. **Clone & Environment Setup**:
    ```bash
-   git clone https://github.com/opensource/gst-reconciler.git
+   git clone https://github.com/vipranshusachan/gst-reconciler.git
    cd gst-reconciler
    python -m venv venv
    venv\Scripts\activate

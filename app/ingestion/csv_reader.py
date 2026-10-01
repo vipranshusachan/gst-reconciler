@@ -62,7 +62,7 @@ class CSVReader(BaseTabularReader):
         header_row_idx = 0
         best_match_count = 0
         for idx, row in enumerate(raw_rows[:15]):
-            text_cells = [str(c).lower() for c in row if c]
+            text_cells = [c.lower() for c in row if c]
             match_count = sum(
                 1 for c in text_cells if any(kw in c for kw in GST_HEADER_KEYWORDS)
             )
@@ -73,7 +73,7 @@ class CSVReader(BaseTabularReader):
         raw_headers = raw_rows[header_row_idx]
         headers: List[str] = []
         for i, h in enumerate(raw_headers):
-            val = str(h).strip()
+            val = h.strip()
             if not val:
                 val = f"Column_{i+1}"
             headers.append(val)

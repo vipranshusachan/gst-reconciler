@@ -263,9 +263,9 @@ class WizardView(QWidget):
 
         self.table_map = QTableWidget(len(CANONICAL_FIELDS), 3)
         self.table_map.setHorizontalHeaderLabels(["Accounting Attribute", "Source A (Portal) Column", "Source B (Books) Column"])
-        self.table_map.horizontalHeader().setSectionResizeMode(0, QHeaderView.Stretch)
-        self.table_map.horizontalHeader().setSectionResizeMode(1, QHeaderView.Stretch)
-        self.table_map.horizontalHeader().setSectionResizeMode(2, QHeaderView.Stretch)
+        self.table_map.horizontalHeader().setSectionResizeMode(0, QHeaderView.ResizeMode.Stretch)
+        self.table_map.horizontalHeader().setSectionResizeMode(1, QHeaderView.ResizeMode.Stretch)
+        self.table_map.horizontalHeader().setSectionResizeMode(2, QHeaderView.ResizeMode.Stretch)
         self.table_map.verticalHeader().setVisible(False)
         p_layout.addWidget(self.table_map)
 
@@ -283,7 +283,7 @@ class WizardView(QWidget):
         for row_idx, (canon_key, canon_label) in enumerate(CANONICAL_FIELDS.items()):
             # Col 0: Label
             item_lbl = QTableWidgetItem(canon_label)
-            item_lbl.setFlags(Qt.ItemIsEnabled)
+            item_lbl.setFlags(Qt.ItemFlag.ItemIsEnabled)
             self.table_map.setItem(row_idx, 0, item_lbl)
 
             # Col 1: Combo for Source A
@@ -350,7 +350,7 @@ class WizardView(QWidget):
         p_layout.addStretch()
 
         self.lbl_progress = QLabel("Initializing reconciliation...")
-        self.lbl_progress.setAlignment(Qt.AlignCenter)
+        self.lbl_progress.setAlignment(Qt.AlignmentFlag.AlignCenter)
         self.lbl_progress.setStyleSheet("font-size: 14px; font-weight: bold; color: #38bdf8;")
         p_layout.addWidget(self.lbl_progress)
 
@@ -398,10 +398,10 @@ class WizardView(QWidget):
                 canon_key = list(CANONICAL_FIELDS.keys())[row]
                 cb_a = self.table_map.cellWidget(row, 1)
                 cb_b = self.table_map.cellWidget(row, 2)
-                if cb_a and cb_a.currentData():
-                    self.mapping_a[cb_a.currentData()] = canon_key
-                if cb_b and cb_b.currentData():
-                    self.mapping_b[cb_b.currentData()] = canon_key
+                if isinstance(cb_a, QComboBox) and cb_a.currentData():
+                    self.mapping_a[str(cb_a.currentData())] = canon_key
+                if isinstance(cb_b, QComboBox) and cb_b.currentData():
+                    self.mapping_b[str(cb_b.currentData())] = canon_key
 
             self.pages.setCurrentIndex(2)
             self.lbl_step.setText("Step 3 of 4: Configure Tolerances & Rules")
@@ -426,6 +426,10 @@ class WizardView(QWidget):
             self.btn_next.setText("Next: Tolerances →")
 
     def _run_reconciliation(self):
+        if not self.file_a_path or not self.file_b_path:
+            self._on_failed("Both source files must be selected.")
+            return
+
         tol = Tolerances(
             taxable=Decimal(str(self.spin_taxable.value())),
             cgst=Decimal(str(self.spin_tax.value())),

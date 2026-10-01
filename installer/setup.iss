@@ -4,7 +4,7 @@
 #define MyAppName "GST Reconciler"
 #define MyAppVersion "1.0.0"
 #define MyAppPublisher "Open Source GST Community"
-#define MyAppURL "https://github.com/opensource/gst-reconciler"
+#define MyAppURL "https://github.com/vipranshusachan/gst-reconciler"
 #define MyAppExeName "GSTReconciler.exe"
 
 [Setup]

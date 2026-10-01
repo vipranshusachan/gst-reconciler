@@ -15,7 +15,7 @@ class MetricCard(QFrame):
         parent=None,
     ):
         super().__init__(parent)
-        self.setFrameShape(QFrame.StyledPanel)
+        self.setFrameShape(QFrame.Shape.StyledPanel)
         self.setStyleSheet(f"""
             QFrame {{
                 background-color: #1e293b;

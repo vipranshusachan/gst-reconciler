@@ -14,7 +14,7 @@ def normalize_invoice_number(raw_invoice_no: str | None) -> str:
     if raw_invoice_no is None:
         return ""
     
-    text = str(raw_invoice_no).strip().upper()
+    text = raw_invoice_no.strip().upper()
     if not text:
         return ""
 
