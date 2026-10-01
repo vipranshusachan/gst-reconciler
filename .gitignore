@@ -33,6 +33,7 @@ MANIFEST
 # Installer output
 Output/
 *.exe
+*.zip
 
 # Unit test / coverage reports
 htmlcov/
