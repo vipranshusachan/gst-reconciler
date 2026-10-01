@@ -1,7 +1,9 @@
 """Unit tests for multi-format date parser."""
 
 from datetime import date
+
 from app.normalization.date_parser import parse_date
+
 
 def test_parse_standard_dates():
     expected = date(2026, 9, 15)

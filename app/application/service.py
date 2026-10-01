@@ -9,11 +9,10 @@ from app.core.logging import get_logger
 from app.database.db import DatabaseManager
 from app.database.migrations import run_migrations
 from app.database.repository import ReconciliationRepository
-from app.domain.models import InvoiceRecord, MappingProfile, ReconciliationSummary
+from app.domain.models import InvoiceRecord, ReconciliationSummary
 from app.ingestion import get_reader_for_file
-from app.normalization.column_mapper import ColumnMapper
 from app.normalization.date_parser import parse_date
-from app.normalization.gstin import normalize_gstin, validate_gstin
+from app.normalization.gstin import validate_gstin
 from app.normalization.invoice_no import normalize_invoice_number
 from app.reconciliation.engine import ReconciliationEngine
 from app.reporting.csv_exporter import CSVExporter
@@ -51,7 +50,7 @@ class ReconciliationService:
 
     def inspect_file(self, file_path: Path) -> Tuple[List[str], List[str], List[Dict[str, Any]]]:
         """Inspect file sheets, headers, and first 5 preview rows.
-        
+
         Returns:
             (sheet_names, headers, sample_preview_rows)
         """

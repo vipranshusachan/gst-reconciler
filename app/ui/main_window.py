@@ -1,7 +1,7 @@
 """Main Desktop Window with Sidebar Navigation and Central View Router."""
 
 from pathlib import Path
-from PySide6.QtCore import Qt
+
 from PySide6.QtWidgets import (
     QFrame,
     QHBoxLayout,
@@ -60,11 +60,11 @@ class MainWindow(QMainWindow):
         self.reports_view = ReportsView(self.service)
         self.settings_view = SettingsView(self.config)
 
-        self.stack.addWidget(self.dashboard_view)    # Index 0
-        self.stack.addWidget(self.wizard_view)       # Index 1
-        self.stack.addWidget(self.explorer_view)     # Index 2
-        self.stack.addWidget(self.reports_view)      # Index 3
-        self.stack.addWidget(self.settings_view)     # Index 4
+        self.stack.addWidget(self.dashboard_view)  # Index 0
+        self.stack.addWidget(self.wizard_view)  # Index 1
+        self.stack.addWidget(self.explorer_view)  # Index 2
+        self.stack.addWidget(self.reports_view)  # Index 3
+        self.stack.addWidget(self.settings_view)  # Index 4
 
         root_layout.addWidget(self.stack)
 
@@ -110,7 +110,9 @@ class MainWindow(QMainWindow):
         # Brand Logo / Title
         brand_box = QVBoxLayout()
         lbl_app = QLabel("GST RECONCILER")
-        lbl_app.setStyleSheet("color: #38bdf8; font-size: 16px; font-weight: 800; letter-spacing: 1px;")
+        lbl_app.setStyleSheet(
+            "color: #38bdf8; font-size: 16px; font-weight: 800; letter-spacing: 1px;"
+        )
         brand_box.addWidget(lbl_app)
 
         lbl_desc = QLabel("Offline Tax Matcher")
@@ -185,6 +187,7 @@ class MainWindow(QMainWindow):
 
         if not file_a.exists() or not file_b.exists():
             from demo.generate_demo_data import generate_demo_files
+
             generate_demo_files(demo_dir)
 
         # Ingest and map
@@ -212,5 +215,5 @@ class MainWindow(QMainWindow):
             f"• Matched: {summary.total_matched}\n"
             f"• Differences: {summary.total_matched_with_diff}\n"
             f"• ITC at Risk: {summary.total_missing_in_a} (₹{summary.itc_at_risk_amount:,.2f})\n"
-            f"• Unclaimed ITC: {summary.total_missing_in_b} (₹{summary.unclaimed_itc_amount:,.2f})"
+            f"• Unclaimed ITC: {summary.total_missing_in_b} (₹{summary.unclaimed_itc_amount:,.2f})",
         )

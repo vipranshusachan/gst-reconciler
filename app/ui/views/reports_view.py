@@ -2,10 +2,10 @@
 
 from pathlib import Path
 from typing import Optional
+
 from PySide6.QtWidgets import (
     QFileDialog,
     QFrame,
-    QHBoxLayout,
     QLabel,
     QMessageBox,
     QPushButton,
@@ -15,6 +15,7 @@ from PySide6.QtWidgets import (
 
 from app.application.service import ReconciliationService
 from app.domain.models import ReconciliationSummary
+
 
 class ReportsView(QWidget):
     """Export hub for Excel workbooks and CSV files."""
@@ -53,7 +54,9 @@ class ReportsView(QWidget):
         lbl_title.setStyleSheet("font-size: 20px; font-weight: bold; color: #f8fafc;")
         layout.addWidget(lbl_title)
 
-        desc = QLabel("Generate audit-ready spreadsheets and data pipelines from the latest reconciliation run.")
+        desc = QLabel(
+            "Generate audit-ready spreadsheets and data pipelines from the latest reconciliation run."
+        )
         desc.setStyleSheet("color: #94a3b8; font-size: 13px;")
         layout.addWidget(desc)
 
@@ -61,7 +64,9 @@ class ReportsView(QWidget):
         card_excel = QFrame()
         lay_ex = QVBoxLayout(card_excel)
         lay_ex.addWidget(QLabel("<b>Excel Audit Workbook (.xlsx)</b>"))
-        lbl_ex_desc = QLabel("Comprehensive multi-tab Excel file containing Executive Summary, Itemized Mismatches, ITC at Risk, Unclaimed ITC, and Matched sheets with financial color tags.")
+        lbl_ex_desc = QLabel(
+            "Comprehensive multi-tab Excel file containing Executive Summary, Itemized Mismatches, ITC at Risk, Unclaimed ITC, and Matched sheets with financial color tags."
+        )
         lbl_ex_desc.setStyleSheet("color: #94a3b8; font-size: 12px;")
         lbl_ex_desc.setWordWrap(True)
         lay_ex.addWidget(lbl_ex_desc)
@@ -76,7 +81,9 @@ class ReportsView(QWidget):
         card_csv = QFrame()
         lay_csv = QVBoxLayout(card_csv)
         lay_csv.addWidget(QLabel("<b>Raw Reconciled Ledger (.csv)</b>"))
-        lbl_csv_desc = QLabel("Flat CSV format for importing into ERPs, custom business intelligence pipelines, or database ingestion.")
+        lbl_csv_desc = QLabel(
+            "Flat CSV format for importing into ERPs, custom business intelligence pipelines, or database ingestion."
+        )
         lbl_csv_desc.setStyleSheet("color: #94a3b8; font-size: 12px;")
         lbl_csv_desc.setWordWrap(True)
         lay_csv.addWidget(lbl_csv_desc)
@@ -98,13 +105,17 @@ class ReportsView(QWidget):
             return
 
         default_name = f"GST_Audit_Report_{Path(self.current_summary.source_b_file).stem}.xlsx"
-        path_str, _ = QFileDialog.getSaveFileName(self, "Save Excel Report", default_name, "Excel Files (*.xlsx)")
+        path_str, _ = QFileDialog.getSaveFileName(
+            self, "Save Excel Report", default_name, "Excel Files (*.xlsx)"
+        )
         if not path_str:
             return
 
         try:
             self.service.export_excel(self.current_summary, Path(path_str))
-            QMessageBox.information(self, "Success", f"Excel report generated successfully:\n{path_str}")
+            QMessageBox.information(
+                self, "Success", f"Excel report generated successfully:\n{path_str}"
+            )
         except Exception as e:
             QMessageBox.critical(self, "Export Error", f"Failed to export Excel report: {e}")
 
@@ -114,7 +125,9 @@ class ReportsView(QWidget):
             return
 
         default_name = f"GST_Reconciliation_{Path(self.current_summary.source_b_file).stem}.csv"
-        path_str, _ = QFileDialog.getSaveFileName(self, "Save CSV File", default_name, "CSV Files (*.csv)")
+        path_str, _ = QFileDialog.getSaveFileName(
+            self, "Save CSV File", default_name, "CSV Files (*.csv)"
+        )
         if not path_str:
             return
 

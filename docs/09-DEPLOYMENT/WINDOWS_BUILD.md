@@ -11,17 +11,19 @@ from pathlib import Path
 
 ROOT = Path(__file__).parent
 
-PyInstaller.__main__.run([
-    str(ROOT / "app" / "ui" / "app.py"),
-    "--name=GSTReconciler",
-    "--windowed",                 # No console window
-    "--onedir",                   # Faster startup than --onefile
-    "--noconfirm",
-    "--clean",
-    f"--add-data={ROOT / 'app' / 'ui' / 'assets'};assets",
-    f"--add-data={ROOT / 'demo'};demo",
-    "--icon=assets/app_icon.ico",
-])
+PyInstaller.__main__.run(
+    [
+        str(ROOT / "app" / "ui" / "app.py"),
+        "--name=GSTReconciler",
+        "--windowed",  # No console window
+        "--onedir",  # Faster startup than --onefile
+        "--noconfirm",
+        "--clean",
+        f"--add-data={ROOT / 'app' / 'ui' / 'assets'};assets",
+        f"--add-data={ROOT / 'demo'};demo",
+        "--icon=assets/app_icon.ico",
+    ]
+)
 ```
 
 ---

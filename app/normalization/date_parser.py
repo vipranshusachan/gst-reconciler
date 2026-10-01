@@ -1,7 +1,7 @@
 """Multi-format date parsing and normalization for Indian accounting files."""
 
-from datetime import date, datetime, timedelta
 import re
+from datetime import date, datetime, timedelta
 from typing import Any, Optional
 
 EXCEL_EPOCH = datetime(1899, 12, 30)
@@ -21,6 +21,7 @@ DATE_FORMATS = [
     "%Y/%m/%d",
     "%m/%d/%Y",
 ]
+
 
 def parse_date(value: Any) -> Optional[date]:
     """Convert various date representations into a standard datetime.date."""

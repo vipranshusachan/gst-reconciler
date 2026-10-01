@@ -1,15 +1,16 @@
 """Status Badges and Color Helpers for Reconciliation States."""
 
 from PySide6.QtWidgets import QLabel
+
 from app.domain.enums import MatchStatus
 
 STATUS_COLORS = {
-    MatchStatus.MATCHED: ("#065f46", "#d1fae5"),                    # Dark green on soft mint
-    MatchStatus.MATCHED_WITH_DIFFERENCE: ("#92400e", "#fef3c7"),    # Dark amber on soft yellow
-    MatchStatus.MISSING_IN_SOURCE_A: ("#991b1b", "#fee2e2"),        # Dark red on soft pink
-    MatchStatus.MISSING_IN_SOURCE_B: ("#5b21b6", "#ede9fe"),        # Dark purple on soft lavender
-    MatchStatus.DUPLICATE: ("#831843", "#fce7f3"),                  # Dark rose on soft rose
-    MatchStatus.INVALID_DATA: ("#374151", "#f3f4f6"),               # Dark gray
+    MatchStatus.MATCHED: ("#065f46", "#d1fae5"),  # Dark green on soft mint
+    MatchStatus.MATCHED_WITH_DIFFERENCE: ("#92400e", "#fef3c7"),  # Dark amber on soft yellow
+    MatchStatus.MISSING_IN_SOURCE_A: ("#991b1b", "#fee2e2"),  # Dark red on soft pink
+    MatchStatus.MISSING_IN_SOURCE_B: ("#5b21b6", "#ede9fe"),  # Dark purple on soft lavender
+    MatchStatus.DUPLICATE: ("#831843", "#fce7f3"),  # Dark rose on soft rose
+    MatchStatus.INVALID_DATA: ("#374151", "#f3f4f6"),  # Dark gray
 }
 
 STATUS_LABELS = {
@@ -20,6 +21,7 @@ STATUS_LABELS = {
     MatchStatus.DUPLICATE: "DUPLICATE",
     MatchStatus.INVALID_DATA: "INVALID",
 }
+
 
 def create_status_badge(status: MatchStatus) -> QLabel:
     """Return a styled QLabel formatted as a status pill badge."""

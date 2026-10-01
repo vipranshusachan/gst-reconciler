@@ -3,6 +3,7 @@
 from app.domain.models import MappingProfile
 from app.normalization.column_mapper import ColumnMapper
 
+
 def test_detect_mappings_gstr2b():
     headers = [
         "GSTIN of Supplier",
@@ -50,7 +51,7 @@ def test_apply_profile():
     headers = ["Vendor_Tax_ID", "Bill_Ref", "Base_Amt"]
     profile = MappingProfile(
         profile_name="Custom ERP",
-        mappings={"Vendor_Tax_ID": "supplier_gstin", "Bill_Ref": "invoice_number"}
+        mappings={"Vendor_Tax_ID": "supplier_gstin", "Bill_Ref": "invoice_number"},
     )
 
     applied_mappings, confs = ColumnMapper.apply_profile(headers, profile)

@@ -1,8 +1,6 @@
 """Side-by-Side Comparison Modal Dialog for Deep Invoice Inspection."""
 
-from decimal import Decimal
-from typing import Optional
-from PySide6.QtCore import Qt, Signal
+from PySide6.QtCore import Signal
 from PySide6.QtWidgets import (
     QDialog,
     QFrame,
@@ -16,6 +14,7 @@ from PySide6.QtWidgets import (
 
 from app.domain.enums import ReviewStatus
 from app.domain.models import MatchRecord
+
 
 class ComparisonDialog(QDialog):
     """Side-by-side inspection dialog showing field deltas and review actions."""
@@ -51,8 +50,10 @@ class ComparisonDialog(QDialog):
         hdr_frame = QFrame()
         hdr_frame.setStyleSheet("background-color: #1e293b; border-radius: 8px; padding: 12px;")
         hdr_layout = QVBoxLayout(hdr_frame)
-        
-        status_lbl = QLabel(f"Match Status: {match.match_status.value} (Level: {match.match_level.value})")
+
+        status_lbl = QLabel(
+            f"Match Status: {match.match_status.value} (Level: {match.match_level.value})"
+        )
         status_lbl.setStyleSheet("color: #38bdf8; font-size: 15px; font-weight: bold;")
         hdr_layout.addWidget(status_lbl)
 
@@ -88,16 +89,68 @@ class ComparisonDialog(QDialog):
         rb = match.record_b
 
         fields = [
-            ("Supplier GSTIN", ra.supplier_gstin if ra else "-", rb.supplier_gstin if rb else "-", "MATCH" if (ra and rb and ra.supplier_gstin == rb.supplier_gstin) else "DIFF"),
-            ("Supplier Name", ra.supplier_name if (ra and ra.supplier_name) else "-", rb.supplier_name if (rb and rb.supplier_name) else "-", "-"),
-            ("Invoice Number", ra.raw_invoice_number if ra else "-", rb.raw_invoice_number if rb else "-", "MATCH" if (ra and rb and ra.raw_invoice_number == rb.raw_invoice_number) else "DIFF"),
-            ("Invoice Date", ra.invoice_date.isoformat() if (ra and ra.invoice_date) else "-", rb.invoice_date.isoformat() if (rb and rb.invoice_date) else "-", "-"),
-            ("Taxable Value", f"₹ {ra.taxable_value:,.2f}" if ra else "-", f"₹ {rb.taxable_value:,.2f}" if rb else "-", f"{match.diff_taxable:+,.2f}"),
-            ("IGST Amount", f"₹ {ra.igst:,.2f}" if ra else "-", f"₹ {rb.igst:,.2f}" if rb else "-", f"{match.diff_igst:+,.2f}"),
-            ("CGST Amount", f"₹ {ra.cgst:,.2f}" if ra else "-", f"₹ {rb.cgst:,.2f}" if rb else "-", f"{match.diff_cgst:+,.2f}"),
-            ("SGST Amount", f"₹ {ra.sgst:,.2f}" if ra else "-", f"₹ {rb.sgst:,.2f}" if rb else "-", f"{match.diff_sgst:+,.2f}"),
-            ("Total Tax", f"₹ {ra.calculate_total_tax():,.2f}" if ra else "-", f"₹ {rb.calculate_total_tax():,.2f}" if rb else "-", f"{match.diff_total_tax:+,.2f}"),
-            ("Total Invoice Value", f"₹ {ra.total_invoice_value:,.2f}" if ra else "-", f"₹ {rb.total_invoice_value:,.2f}" if rb else "-", f"{match.diff_total_value:+,.2f}"),
+            (
+                "Supplier GSTIN",
+                ra.supplier_gstin if ra else "-",
+                rb.supplier_gstin if rb else "-",
+                "MATCH" if (ra and rb and ra.supplier_gstin == rb.supplier_gstin) else "DIFF",
+            ),
+            (
+                "Supplier Name",
+                ra.supplier_name if (ra and ra.supplier_name) else "-",
+                rb.supplier_name if (rb and rb.supplier_name) else "-",
+                "-",
+            ),
+            (
+                "Invoice Number",
+                ra.raw_invoice_number if ra else "-",
+                rb.raw_invoice_number if rb else "-",
+                "MATCH"
+                if (ra and rb and ra.raw_invoice_number == rb.raw_invoice_number)
+                else "DIFF",
+            ),
+            (
+                "Invoice Date",
+                ra.invoice_date.isoformat() if (ra and ra.invoice_date) else "-",
+                rb.invoice_date.isoformat() if (rb and rb.invoice_date) else "-",
+                "-",
+            ),
+            (
+                "Taxable Value",
+                f"₹ {ra.taxable_value:,.2f}" if ra else "-",
+                f"₹ {rb.taxable_value:,.2f}" if rb else "-",
+                f"{match.diff_taxable:+,.2f}",
+            ),
+            (
+                "IGST Amount",
+                f"₹ {ra.igst:,.2f}" if ra else "-",
+                f"₹ {rb.igst:,.2f}" if rb else "-",
+                f"{match.diff_igst:+,.2f}",
+            ),
+            (
+                "CGST Amount",
+                f"₹ {ra.cgst:,.2f}" if ra else "-",
+                f"₹ {rb.cgst:,.2f}" if rb else "-",
+                f"{match.diff_cgst:+,.2f}",
+            ),
+            (
+                "SGST Amount",
+                f"₹ {ra.sgst:,.2f}" if ra else "-",
+                f"₹ {rb.sgst:,.2f}" if rb else "-",
+                f"{match.diff_sgst:+,.2f}",
+            ),
+            (
+                "Total Tax",
+                f"₹ {ra.calculate_total_tax():,.2f}" if ra else "-",
+                f"₹ {rb.calculate_total_tax():,.2f}" if rb else "-",
+                f"{match.diff_total_tax:+,.2f}",
+            ),
+            (
+                "Total Invoice Value",
+                f"₹ {ra.total_invoice_value:,.2f}" if ra else "-",
+                f"₹ {rb.total_invoice_value:,.2f}" if rb else "-",
+                f"{match.diff_total_value:+,.2f}",
+            ),
         ]
 
         for row_idx, (f_name, val_a, val_b, delta) in enumerate(fields, 1):
@@ -108,7 +161,7 @@ class ComparisonDialog(QDialog):
             lbl_b = QLabel(val_b)
             lbl_b.setStyleSheet("color: #f8fafc; font-family: monospace;")
             lbl_d = QLabel(delta)
-            
+
             # Highlight differences
             if delta != "-" and delta != "MATCH" and delta != "+0.00" and delta != "0.00":
                 lbl_d.setStyleSheet("color: #f59e0b; font-weight: bold; font-family: monospace;")
@@ -128,8 +181,12 @@ class ComparisonDialog(QDialog):
         act_layout.setContentsMargins(0, 0, 0, 0)
 
         self.txt_note = QLineEdit()
-        self.txt_note.setPlaceholderText("Optional review note (e.g. Approved round-off tolerance)...")
-        self.txt_note.setStyleSheet("background-color: #1e293b; color: #f8fafc; border: 1px solid #334155; border-radius: 6px; padding: 8px;")
+        self.txt_note.setPlaceholderText(
+            "Optional review note (e.g. Approved round-off tolerance)..."
+        )
+        self.txt_note.setStyleSheet(
+            "background-color: #1e293b; color: #f8fafc; border: 1px solid #334155; border-radius: 6px; padding: 8px;"
+        )
         act_layout.addWidget(self.txt_note)
 
         btn_accept = QPushButton("Accept Difference")

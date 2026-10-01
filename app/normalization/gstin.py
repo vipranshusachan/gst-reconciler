@@ -39,7 +39,7 @@ def compute_gstin_checksum(gstin_14: str) -> str:
 
 def validate_gstin(raw_gstin: str | None) -> Tuple[bool, str, str]:
     """Validate GSTIN format and checksum.
-    
+
     Returns:
         (is_valid, normalized_gstin, error_message)
     """

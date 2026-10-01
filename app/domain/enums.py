@@ -2,8 +2,10 @@
 
 from enum import Enum
 
+
 class MatchStatus(str, Enum):
     """High-level classification of a reconciliation result."""
+
     MATCHED = "MATCHED"
     MATCHED_WITH_DIFFERENCE = "MATCHED_WITH_DIFFERENCE"
     MISSING_IN_SOURCE_A = "MISSING_IN_SOURCE_A"  # In Books, missing in Portal 2B (ITC at Risk)
@@ -14,15 +16,17 @@ class MatchStatus(str, Enum):
 
 class MatchLevel(str, Enum):
     """Specific matching rule / strategy that matched the records."""
-    EXACT = "EXACT"                  # GSTIN + Exact InvNo + Date + Amounts
-    STRONG = "STRONG"                # GSTIN + Cleaned InvNo + Amounts
-    NORMALIZED = "NORMALIZED"        # GSTIN + Cleaned InvNo + Date window
-    FUZZY = "FUZZY"                  # Token similarity >= threshold
+
+    EXACT = "EXACT"  # GSTIN + Exact InvNo + Date + Amounts
+    STRONG = "STRONG"  # GSTIN + Cleaned InvNo + Amounts
+    NORMALIZED = "NORMALIZED"  # GSTIN + Cleaned InvNo + Date window
+    FUZZY = "FUZZY"  # Token similarity >= threshold
     NONE = "NONE"
 
 
 class DiscrepancyType(str, Enum):
     """Granular diagnostic issue categories."""
+
     TAXABLE_VALUE_MISMATCH = "TAXABLE_VALUE_MISMATCH"
     IGST_MISMATCH = "IGST_MISMATCH"
     CGST_MISMATCH = "CGST_MISMATCH"
@@ -41,6 +45,7 @@ class DiscrepancyType(str, Enum):
 
 class ReviewStatus(str, Enum):
     """Accountant review and resolution states."""
+
     OPEN = "OPEN"
     REVIEWED = "REVIEWED"
     ACCEPTED = "ACCEPTED"
@@ -50,11 +55,12 @@ class ReviewStatus(str, Enum):
 
 class DocumentType(str, Enum):
     """GST tax document types."""
-    B2B = "B2B"          # Standard B2B Invoice
-    CDNR = "CDNR"        # Credit / Debit Note Registered
-    CDNUR = "CDNUR"      # Credit / Debit Note Unregistered
-    B2BUR = "B2BUR"      # B2B Reverse Charge Unregistered
-    SEZWP = "SEZWP"      # SEZ Supplies with Payment
-    SEZWOP = "SEZWOP"    # SEZ Supplies without Payment
-    IMPG = "IMPG"        # Import of Goods
-    IMPS = "IMPS"        # Import of Services
+
+    B2B = "B2B"  # Standard B2B Invoice
+    CDNR = "CDNR"  # Credit / Debit Note Registered
+    CDNUR = "CDNUR"  # Credit / Debit Note Unregistered
+    B2BUR = "B2BUR"  # B2B Reverse Charge Unregistered
+    SEZWP = "SEZWP"  # SEZ Supplies with Payment
+    SEZWOP = "SEZWOP"  # SEZ Supplies without Payment
+    IMPG = "IMPG"  # Import of Goods
+    IMPS = "IMPS"  # Import of Services

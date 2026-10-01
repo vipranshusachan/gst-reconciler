@@ -4,6 +4,7 @@ from abc import ABC, abstractmethod
 from pathlib import Path
 from typing import Any, Dict, List, Optional, Tuple
 
+
 class BaseTabularReader(ABC):
     """Abstract reader for tabular financial files."""
 

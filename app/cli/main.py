@@ -1,8 +1,9 @@
 """Command-Line Interface for GST Reconciler."""
 
+import sys
 from decimal import Decimal
 from pathlib import Path
-import sys
+
 import click
 
 from app import __version__
@@ -22,16 +23,46 @@ def cli():
 def gui():
     """Launch the PySide6 Desktop User Interface."""
     from app.ui.app import run_app
+
     sys.exit(run_app())
 
 
 @cli.command()
-@click.option("--source-a", "-a", required=True, type=click.Path(exists=True, path_type=Path), help="Path to Source A (e.g. GSTR-2B Excel/CSV)")
-@click.option("--source-b", "-b", required=True, type=click.Path(exists=True, path_type=Path), help="Path to Source B (e.g. Purchase Register Excel/CSV)")
-@click.option("--taxable-tolerance", default=5.0, type=float, help="Allowable taxable value difference in Rupees (default 5.0)")
-@click.option("--tax-tolerance", default=2.0, type=float, help="Allowable tax component difference in Rupees (default 2.0)")
-@click.option("--date-tolerance", default=30, type=int, help="Allowable date difference in days (default 30)")
-@click.option("--export", "-e", type=click.Path(path_type=Path), help="Optional path to output Excel report (.xlsx)")
+@click.option(
+    "--source-a",
+    "-a",
+    required=True,
+    type=click.Path(exists=True, path_type=Path),
+    help="Path to Source A (e.g. GSTR-2B Excel/CSV)",
+)
+@click.option(
+    "--source-b",
+    "-b",
+    required=True,
+    type=click.Path(exists=True, path_type=Path),
+    help="Path to Source B (e.g. Purchase Register Excel/CSV)",
+)
+@click.option(
+    "--taxable-tolerance",
+    default=5.0,
+    type=float,
+    help="Allowable taxable value difference in Rupees (default 5.0)",
+)
+@click.option(
+    "--tax-tolerance",
+    default=2.0,
+    type=float,
+    help="Allowable tax component difference in Rupees (default 2.0)",
+)
+@click.option(
+    "--date-tolerance", default=30, type=int, help="Allowable date difference in days (default 30)"
+)
+@click.option(
+    "--export",
+    "-e",
+    type=click.Path(path_type=Path),
+    help="Optional path to output Excel report (.xlsx)",
+)
 def reconcile(
     source_a: Path,
     source_b: Path,
@@ -88,10 +119,16 @@ def reconcile(
     click.echo("RECONCILIATION SUMMARY")
     click.echo("=" * 55)
     click.echo(f"Total Processed:            {summary.total_processed}")
-    click.echo(f"Matched (Within Tolerance): {summary.total_matched} ({summary.match_rate_percentage}%)")
+    click.echo(
+        f"Matched (Within Tolerance): {summary.total_matched} ({summary.match_rate_percentage}%)"
+    )
     click.echo(f"Matched with Differences:   {summary.total_matched_with_diff}")
-    click.echo(f"ITC at Risk (Missing in 2B):{summary.total_missing_in_a} (Amount: Rs. {summary.itc_at_risk_amount:,.2f})")
-    click.echo(f"Unclaimed (Missing in Books):{summary.total_missing_in_b} (Amount: Rs. {summary.unclaimed_itc_amount:,.2f})")
+    click.echo(
+        f"ITC at Risk (Missing in 2B):{summary.total_missing_in_a} (Amount: Rs. {summary.itc_at_risk_amount:,.2f})"
+    )
+    click.echo(
+        f"Unclaimed (Missing in Books):{summary.total_missing_in_b} (Amount: Rs. {summary.unclaimed_itc_amount:,.2f})"
+    )
     click.echo(f"Net Tax Difference:         Rs. {summary.net_diff_tax:,.2f}")
     click.echo("=" * 55)
 

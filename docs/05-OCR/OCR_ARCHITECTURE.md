@@ -10,11 +10,13 @@ from pathlib import Path
 from typing import Optional, Dict, Any
 from dataclasses import dataclass
 
+
 @dataclass
 class OCRResult:
     text: str
     confidence: float
     metadata: Dict[str, Any]
+
 
 class OCRProvider(ABC):
     @abstractmethod

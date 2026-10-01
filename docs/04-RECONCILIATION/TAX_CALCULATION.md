@@ -15,13 +15,13 @@ Tolerances are configurable in `Settings`:
 ```python
 @dataclass
 class Tolerances:
-    taxable: Decimal = Decimal("5.00")      # Maximum allowable taxable discrepancy (₹)
-    cgst: Decimal = Decimal("2.00")         # Maximum allowable CGST discrepancy (₹)
-    sgst: Decimal = Decimal("2.00")         # Maximum allowable SGST discrepancy (₹)
-    igst: Decimal = Decimal("2.00")         # Maximum allowable IGST discrepancy (₹)
-    cess: Decimal = Decimal("2.00")         # Maximum allowable Cess discrepancy (₹)
+    taxable: Decimal = Decimal("5.00")  # Maximum allowable taxable discrepancy (₹)
+    cgst: Decimal = Decimal("2.00")  # Maximum allowable CGST discrepancy (₹)
+    sgst: Decimal = Decimal("2.00")  # Maximum allowable SGST discrepancy (₹)
+    igst: Decimal = Decimal("2.00")  # Maximum allowable IGST discrepancy (₹)
+    cess: Decimal = Decimal("2.00")  # Maximum allowable Cess discrepancy (₹)
     total_value: Decimal = Decimal("5.00")  # Maximum allowable invoice gross discrepancy (₹)
-    date_days: int = 30                     # Allowable invoice date difference in days
+    date_days: int = 30  # Allowable invoice date difference in days
 ```
 
 ### Evaluation Logic:

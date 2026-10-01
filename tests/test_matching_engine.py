@@ -2,10 +2,11 @@
 
 from datetime import date
 from decimal import Decimal
-from app.core.config import Tolerances
+
 from app.domain.enums import MatchLevel, MatchStatus
 from app.domain.models import InvoiceRecord
 from app.reconciliation.engine import ReconciliationEngine
+
 
 def test_engine_exact_match():
     rec_a = InvoiceRecord(

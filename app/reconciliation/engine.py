@@ -261,11 +261,7 @@ class ReconciliationEngine:
         return summary
 
     def _create_match(
-        self,
-        rec_a: InvoiceRecord,
-        rec_b: InvoiceRecord,
-        level: MatchLevel,
-        confidence: float
+        self, rec_a: InvoiceRecord, rec_b: InvoiceRecord, level: MatchLevel, confidence: float
     ) -> MatchRecord:
         """Calculate differences, classify, and construct MatchRecord."""
         (
@@ -316,7 +312,7 @@ class ReconciliationEngine:
         self, records: List[InvoiceRecord]
     ) -> Tuple[List[InvoiceRecord], List[InvoiceRecord]]:
         """Identify duplicate invoices within the same source dataset.
-        
+
         Returns:
             (duplicates, unique_records)
         """
@@ -347,27 +343,55 @@ class ReconciliationEngine:
     ) -> ReconciliationSummary:
         """Compute aggregated metrics for dashboard and reporting."""
         matched_count = sum(1 for m in matches if m.match_status == MatchStatus.MATCHED)
-        diff_count = sum(1 for m in matches if m.match_status == MatchStatus.MATCHED_WITH_DIFFERENCE)
-        missing_a_count = sum(1 for m in matches if m.match_status == MatchStatus.MISSING_IN_SOURCE_A)
-        missing_b_count = sum(1 for m in matches if m.match_status == MatchStatus.MISSING_IN_SOURCE_B)
+        diff_count = sum(
+            1 for m in matches if m.match_status == MatchStatus.MATCHED_WITH_DIFFERENCE
+        )
+        missing_a_count = sum(
+            1 for m in matches if m.match_status == MatchStatus.MISSING_IN_SOURCE_A
+        )
+        missing_b_count = sum(
+            1 for m in matches if m.match_status == MatchStatus.MISSING_IN_SOURCE_B
+        )
 
         tot_taxable_a = sum((r.taxable_value for r in records_a), Decimal("0.00"))
         tot_taxable_b = sum((r.taxable_value for r in records_b), Decimal("0.00"))
         tot_tax_a = sum((r.calculate_total_tax() for r in records_a), Decimal("0.00"))
         tot_tax_b = sum((r.calculate_total_tax() for r in records_b), Decimal("0.00"))
 
-        net_diff_taxable = sum((m.diff_taxable for m in matches if m.match_status in (MatchStatus.MATCHED, MatchStatus.MATCHED_WITH_DIFFERENCE)), Decimal("0.00"))
-        net_diff_tax = sum((m.diff_total_tax for m in matches if m.match_status in (MatchStatus.MATCHED, MatchStatus.MATCHED_WITH_DIFFERENCE)), Decimal("0.00"))
+        net_diff_taxable = sum(
+            (
+                m.diff_taxable
+                for m in matches
+                if m.match_status in (MatchStatus.MATCHED, MatchStatus.MATCHED_WITH_DIFFERENCE)
+            ),
+            Decimal("0.00"),
+        )
+        net_diff_tax = sum(
+            (
+                m.diff_total_tax
+                for m in matches
+                if m.match_status in (MatchStatus.MATCHED, MatchStatus.MATCHED_WITH_DIFFERENCE)
+            ),
+            Decimal("0.00"),
+        )
 
         # ITC at Risk: Tax on records booked in books but missing in 2B
         itc_at_risk = sum(
-            (m.diff_total_tax for m in matches if m.match_status == MatchStatus.MISSING_IN_SOURCE_A),
-            Decimal("0.00")
+            (
+                m.diff_total_tax
+                for m in matches
+                if m.match_status == MatchStatus.MISSING_IN_SOURCE_A
+            ),
+            Decimal("0.00"),
         )
         # Unclaimed ITC: Tax on records in 2B but missing in books
         unclaimed_itc = sum(
-            (-m.diff_total_tax for m in matches if m.match_status == MatchStatus.MISSING_IN_SOURCE_B),
-            Decimal("0.00")
+            (
+                -m.diff_total_tax
+                for m in matches
+                if m.match_status == MatchStatus.MISSING_IN_SOURCE_B
+            ),
+            Decimal("0.00"),
         )
 
         return ReconciliationSummary(

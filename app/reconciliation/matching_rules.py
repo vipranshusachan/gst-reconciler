@@ -1,9 +1,11 @@
 """Multi-tier matching rules for invoice reconciliation."""
 
 from typing import Optional
-from app.normalization.invoice_no import extract_alphanumeric_core, normalize_invoice_number
+
 from app.domain.models import InvoiceRecord
+from app.normalization.invoice_no import extract_alphanumeric_core, normalize_invoice_number
 from app.reconciliation.fuzzy import is_fuzzy_match
+
 
 class MatchingRule:
     """Base class for reconciliation matching passes."""
@@ -29,12 +31,10 @@ class MatchingRule:
 
     @staticmethod
     def fuzzy_match_candidate(
-        rec_a: InvoiceRecord,
-        rec_b: InvoiceRecord,
-        threshold: float = 0.85
+        rec_a: InvoiceRecord, rec_b: InvoiceRecord, threshold: float = 0.85
     ) -> Optional[float]:
         """Check if candidate pair matches under fuzzy conditions.
-        
+
         Anchors:
         - Anchor 1: Supplier GSTIN is identical AND invoice string similarity >= threshold.
         - Anchor 2: Taxable amount is identical AND invoice string similarity >= 0.80.
@@ -42,9 +42,7 @@ class MatchingRule:
         # Anchor 1: Same GSTIN
         if rec_a.supplier_gstin and rec_a.supplier_gstin == rec_b.supplier_gstin:
             matched, score = is_fuzzy_match(
-                rec_a.raw_invoice_number,
-                rec_b.raw_invoice_number,
-                threshold=threshold
+                rec_a.raw_invoice_number, rec_b.raw_invoice_number, threshold=threshold
             )
             if matched:
                 return score
@@ -54,7 +52,7 @@ class MatchingRule:
             matched, score = is_fuzzy_match(
                 rec_a.raw_invoice_number,
                 rec_b.raw_invoice_number,
-                threshold=max(0.80, threshold - 0.05)
+                threshold=max(0.80, threshold - 0.05),
             )
             if matched:
                 return score

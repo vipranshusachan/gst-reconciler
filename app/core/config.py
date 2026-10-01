@@ -1,10 +1,11 @@
 """Configuration and settings manager for GST Reconciler."""
 
+import json
+import os
 from dataclasses import dataclass, field
 from decimal import Decimal
 from pathlib import Path
-import os
-import json
+
 
 def get_default_data_dir() -> Path:
     """Return default application data directory in APPDATA on Windows or ~/.gst_reconciler."""
@@ -16,9 +17,11 @@ def get_default_data_dir() -> Path:
     data_dir.mkdir(parents=True, exist_ok=True)
     return data_dir
 
+
 @dataclass
 class Tolerances:
     """Configurable tolerance thresholds for GST reconciliation."""
+
     taxable: Decimal = Decimal("5.00")
     cgst: Decimal = Decimal("2.00")
     sgst: Decimal = Decimal("2.00")
@@ -59,9 +62,11 @@ class Tolerances:
             fuzzy_threshold=float(data.get("fuzzy_threshold", 0.85)),
         )
 
+
 @dataclass
 class AppConfig:
     """Global application settings."""
+
     data_dir: Path = field(default_factory=get_default_data_dir)
     tolerances: Tolerances = field(default_factory=Tolerances)
     check_updates_on_startup: bool = False

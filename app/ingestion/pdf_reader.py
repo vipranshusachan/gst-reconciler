@@ -8,9 +8,11 @@ from app.ingestion.reader_base import BaseTabularReader
 
 try:
     import pdfplumber
+
     HAS_PDFPLUMBER = True
 except ImportError:
     HAS_PDFPLUMBER = False
+
 
 class PDFReader(BaseTabularReader):
     """Parses digital vector PDFs containing invoice tables."""
@@ -20,7 +22,7 @@ class PDFReader(BaseTabularReader):
             return ["Page 1"]
         try:
             with pdfplumber.open(file_path) as pdf:
-                return [f"Page {i+1}" for i in range(len(pdf.pages))]
+                return [f"Page {i + 1}" for i in range(len(pdf.pages))]
         except Exception:
             return ["Default"]
 
@@ -40,13 +42,13 @@ class PDFReader(BaseTabularReader):
                             if row and any(c is not None for c in row):
                                 all_rows.append(row)
         except Exception as e:
-            raise IngestionError(f"Failed to extract tables from PDF {file_path.name}: {e}")
+            raise IngestionError(f"Failed to extract tables from PDF {file_path.name}: {e}") from e
 
         if not all_rows:
             return [], []
 
         raw_headers = all_rows[0]
-        headers = [str(h).strip() if h else f"Col_{i+1}" for i, h in enumerate(raw_headers)]
+        headers = [str(h).strip() if h else f"Col_{i + 1}" for i, h in enumerate(raw_headers)]
 
         data_rows: List[Dict[str, Any]] = []
         for r in all_rows[1:]:

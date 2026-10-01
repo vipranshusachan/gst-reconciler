@@ -1,7 +1,7 @@
 """Reusable UI Card Widgets for Dashboard and Executive Metrics."""
 
-from PySide6.QtCore import Qt
-from PySide6.QtWidgets import QFrame, QHBoxLayout, QLabel, QVBoxLayout
+from PySide6.QtWidgets import QFrame, QLabel, QVBoxLayout
+
 
 class MetricCard(QFrame):
     """Sleek KPI card displaying a primary value, title, and auxiliary subtitle."""
@@ -32,12 +32,14 @@ class MetricCard(QFrame):
 
         # Title
         self.lbl_title = QLabel(title.upper())
-        self.lbl_title.setStyleSheet("color: #94a3b8; font-size: 11px; font-weight: bold; letter-spacing: 0.5px;")
+        self.lbl_title.setStyleSheet(
+            "color: #94a3b8; font-size: 11px; font-weight: bold; letter-spacing: 0.5px;"
+        )
         layout.addWidget(self.lbl_title)
 
         # Primary Metric Value
         self.lbl_value = QLabel(value)
-        self.lbl_value.setStyleSheet(f"color: #f8fafc; font-size: 22px; font-weight: bold;")
+        self.lbl_value.setStyleSheet("color: #f8fafc; font-size: 22px; font-weight: bold;")
         layout.addWidget(self.lbl_value)
 
         # Subtitle

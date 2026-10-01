@@ -1,7 +1,7 @@
 """Unit tests for GSTIN normalization and checksum validation."""
 
-import pytest
 from app.normalization.gstin import compute_gstin_checksum, normalize_gstin, validate_gstin
+
 
 def test_normalize_gstin():
     assert normalize_gstin("  27aabct3518q1z6  ") == "27AABCT3518Q1Z6"

@@ -1,9 +1,10 @@
 """Integration tests for Ingestion and Reporting modules."""
 
 from pathlib import Path
-from decimal import Decimal
+
 from app.application.service import ReconciliationService
 from app.normalization.column_mapper import ColumnMapper
+
 
 def test_excel_ingestion_and_reporting(tmp_path: Path):
     demo_dir = Path("demo/data")

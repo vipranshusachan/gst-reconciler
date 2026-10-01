@@ -3,6 +3,7 @@
 from decimal import Decimal
 from pathlib import Path
 from typing import Dict, List, Optional
+
 from PySide6.QtCore import Qt, QThread, Signal
 from PySide6.QtWidgets import (
     QCheckBox,
@@ -27,7 +28,7 @@ from PySide6.QtWidgets import (
 
 from app.application.service import ReconciliationService
 from app.core.config import Tolerances
-from app.domain.models import InvoiceRecord, ReconciliationSummary
+from app.domain.models import ReconciliationSummary
 from app.normalization.column_mapper import CANONICAL_FIELDS, ColumnMapper
 
 
@@ -205,7 +206,9 @@ class WizardView(QWidget):
         # Source B Box (Purchase Register)
         frame_b = QFrame()
         lay_b = QVBoxLayout(frame_b)
-        lay_b.addWidget(QLabel("<b>Source B: Internal Accounting Books (Purchase / Sales Register)</b>"))
+        lay_b.addWidget(
+            QLabel("<b>Source B: Internal Accounting Books (Purchase / Sales Register)</b>")
+        )
         h_b = QHBoxLayout()
         self.txt_path_b = QLineEdit()
         self.txt_path_b.setReadOnly(True)
@@ -229,7 +232,10 @@ class WizardView(QWidget):
 
     def _browse_file(self, target: str):
         path_str, _ = QFileDialog.getOpenFileName(
-            self, f"Select Source {target} File", "", "Spreadsheets & Docs (*.xlsx *.xls *.csv *.tsv *.pdf);;All Files (*.*)"
+            self,
+            f"Select Source {target} File",
+            "",
+            "Spreadsheets & Docs (*.xlsx *.xls *.csv *.tsv *.pdf);;All Files (*.*)",
         )
         if not path_str:
             return
@@ -257,12 +263,16 @@ class WizardView(QWidget):
         page = QWidget()
         p_layout = QVBoxLayout(page)
 
-        desc = QLabel("Confirm that each accounting attribute is mapped to the right column in your files.")
+        desc = QLabel(
+            "Confirm that each accounting attribute is mapped to the right column in your files."
+        )
         desc.setStyleSheet("color: #94a3b8; font-size: 12px;")
         p_layout.addWidget(desc)
 
         self.table_map = QTableWidget(len(CANONICAL_FIELDS), 3)
-        self.table_map.setHorizontalHeaderLabels(["Accounting Attribute", "Source A (Portal) Column", "Source B (Books) Column"])
+        self.table_map.setHorizontalHeaderLabels(
+            ["Accounting Attribute", "Source A (Portal) Column", "Source B (Books) Column"]
+        )
         self.table_map.horizontalHeader().setSectionResizeMode(0, QHeaderView.ResizeMode.Stretch)
         self.table_map.horizontalHeader().setSectionResizeMode(1, QHeaderView.ResizeMode.Stretch)
         self.table_map.horizontalHeader().setSectionResizeMode(2, QHeaderView.ResizeMode.Stretch)
@@ -383,7 +393,9 @@ class WizardView(QWidget):
         curr = self.pages.currentIndex()
         if curr == 0:
             if not self.file_a_path or not self.file_b_path:
-                self.lbl_step.setText("⚠️ Please select both Source A and Source B files to continue.")
+                self.lbl_step.setText(
+                    "⚠️ Please select both Source A and Source B files to continue."
+                )
                 return
             self._populate_mapping_step()
             self.pages.setCurrentIndex(1)

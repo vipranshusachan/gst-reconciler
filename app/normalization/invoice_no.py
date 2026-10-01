@@ -2,9 +2,10 @@
 
 import re
 
+
 def normalize_invoice_number(raw_invoice_no: str | None) -> str:
     """Normalize invoice number for robust multi-level matching.
-    
+
     Operations:
     1. Strip leading and trailing whitespace.
     2. Convert to uppercase.
@@ -13,7 +14,7 @@ def normalize_invoice_number(raw_invoice_no: str | None) -> str:
     """
     if raw_invoice_no is None:
         return ""
-    
+
     text = raw_invoice_no.strip().upper()
     if not text:
         return ""
@@ -40,7 +41,7 @@ def normalize_invoice_number(raw_invoice_no: str | None) -> str:
 
 def extract_alphanumeric_core(invoice_no: str | None) -> str:
     """Extract strictly alphanumeric characters with leading zeros removed.
-    
+
     Example: 'INV/2026-27/0042' -> 'INV20262742'
     """
     if not invoice_no:

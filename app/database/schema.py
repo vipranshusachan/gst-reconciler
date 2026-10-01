@@ -1,12 +1,12 @@
 """SQLAlchemy Schema Definitions for SQLite persistence."""
 
 import datetime
+
 from sqlalchemy import (
     Column,
     DateTime,
     Float,
     ForeignKey,
-    Integer,
     Numeric,
     String,
     Text,
@@ -15,8 +15,10 @@ from sqlalchemy.orm import declarative_base, relationship
 
 Base = declarative_base()
 
+
 def _utc_now():
     return datetime.datetime.now(datetime.timezone.utc)
+
 
 class ProjectEntity(Base):
     __tablename__ = "projects"
@@ -27,7 +29,9 @@ class ProjectEntity(Base):
     updated_at = Column(DateTime, default=_utc_now, onupdate=_utc_now)
     description = Column(Text, nullable=True)
 
-    runs = relationship("ReconciliationRunEntity", back_populates="project", cascade="all, delete-orphan")
+    runs = relationship(
+        "ReconciliationRunEntity", back_populates="project", cascade="all, delete-orphan"
+    )
 
 
 class MappingProfileEntity(Base):

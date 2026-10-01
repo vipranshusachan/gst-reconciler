@@ -2,6 +2,7 @@
 
 from decimal import Decimal
 from typing import Any, List, Optional
+
 from PySide6.QtCore import QAbstractTableModel, QModelIndex, QPersistentModelIndex, Qt
 from PySide6.QtGui import QColor
 
@@ -26,6 +27,10 @@ COLUMNS = [
     "Explanation",
 ]
 
+
+_DEFAULT_INDEX = QModelIndex()
+
+
 class ReconciledTableModel(QAbstractTableModel):
     """Virtualized table model supporting 100k+ rows with sorting and filtering."""
 
@@ -34,18 +39,27 @@ class ReconciledTableModel(QAbstractTableModel):
         self._all_records: List[MatchRecord] = matches or []
         self._filtered_records: List[MatchRecord] = list(self._all_records)
 
-    def rowCount(self, parent: QModelIndex | QPersistentModelIndex = QModelIndex()) -> int:
+    def rowCount(self, parent: QModelIndex | QPersistentModelIndex = _DEFAULT_INDEX) -> int:
         return len(self._filtered_records)
 
-    def columnCount(self, parent: QModelIndex | QPersistentModelIndex = QModelIndex()) -> int:
+    def columnCount(self, parent: QModelIndex | QPersistentModelIndex = _DEFAULT_INDEX) -> int:
         return len(COLUMNS)
 
-    def headerData(self, section: int, orientation: Qt.Orientation, role: int = int(Qt.ItemDataRole.DisplayRole)) -> Any:
+    def headerData(
+        self,
+        section: int,
+        orientation: Qt.Orientation,
+        role: int = int(Qt.ItemDataRole.DisplayRole),
+    ) -> Any:
         if orientation == Qt.Orientation.Horizontal and role == int(Qt.ItemDataRole.DisplayRole):
             return COLUMNS[section]
         return None
 
-    def data(self, index: QModelIndex | QPersistentModelIndex, role: int = int(Qt.ItemDataRole.DisplayRole)) -> Any:
+    def data(
+        self,
+        index: QModelIndex | QPersistentModelIndex,
+        role: int = int(Qt.ItemDataRole.DisplayRole),
+    ) -> Any:
         if not index.isValid() or index.row() >= len(self._filtered_records):
             return None
 
@@ -59,9 +73,13 @@ class ReconciledTableModel(QAbstractTableModel):
             if col == 0:
                 return m.match_status.value
             elif col == 1:
-                return (rb.supplier_gstin if rb else (ra.supplier_gstin if ra else ""))
+                return rb.supplier_gstin if rb else (ra.supplier_gstin if ra else "")
             elif col == 2:
-                return (rb.supplier_name if rb and rb.supplier_name else (ra.supplier_name if ra else ""))
+                return (
+                    rb.supplier_name
+                    if rb and rb.supplier_name
+                    else (ra.supplier_name if ra else "")
+                )
             elif col == 3:
                 return ra.raw_invoice_number if ra else "-"
             elif col == 4:
@@ -142,8 +160,16 @@ class ReconciledTableModel(QAbstractTableModel):
             for m in filtered:
                 ra = m.record_a
                 rb = m.record_b
-                gstin = (rb.supplier_gstin if (rb and rb.supplier_gstin) else (ra.supplier_gstin if (ra and ra.supplier_gstin) else "")).lower()
-                name_str = (rb.supplier_name if (rb and rb.supplier_name) else (ra.supplier_name if (ra and ra.supplier_name) else "")) or ""
+                gstin = (
+                    rb.supplier_gstin
+                    if (rb and rb.supplier_gstin)
+                    else (ra.supplier_gstin if (ra and ra.supplier_gstin) else "")
+                ).lower()
+                name_str = (
+                    rb.supplier_name
+                    if (rb and rb.supplier_name)
+                    else (ra.supplier_name if (ra and ra.supplier_name) else "")
+                ) or ""
                 name = name_str.lower()
                 inv_a = (ra.raw_invoice_number if (ra and ra.raw_invoice_number) else "").lower()
                 inv_b = (rb.raw_invoice_number if (rb and rb.raw_invoice_number) else "").lower()

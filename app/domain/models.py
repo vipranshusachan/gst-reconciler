@@ -1,28 +1,30 @@
 """Canonical Domain Models for GST Reconciler."""
 
+import uuid
 from dataclasses import dataclass, field
 from datetime import date
 from decimal import Decimal
 from typing import Any, Dict, List, Optional
-import uuid
 
 from app.domain.enums import DiscrepancyType, MatchLevel, MatchStatus, ReviewStatus
+
 
 @dataclass
 class InvoiceRecord:
     """Canonical representation of an imported invoice row."""
+
     record_id: str = field(default_factory=lambda: str(uuid.uuid4()))
-    source_id: str = "source_a"         # 'source_a' (Portal 2B) or 'source_b' (Books)
+    source_id: str = "source_a"  # 'source_a' (Portal 2B) or 'source_b' (Books)
     source_file: str = ""
     source_row: int = 1
 
     # Identifiers
-    supplier_gstin: str = ""            # Normalized 15-character uppercase GSTIN
-    raw_supplier_gstin: str = ""        # Exact raw imported value
+    supplier_gstin: str = ""  # Normalized 15-character uppercase GSTIN
+    raw_supplier_gstin: str = ""  # Exact raw imported value
     supplier_name: Optional[str] = None
     buyer_gstin: Optional[str] = None
-    invoice_number: str = ""            # Cleaned alphanumeric invoice number
-    raw_invoice_number: str = ""        # Exact raw imported value
+    invoice_number: str = ""  # Cleaned alphanumeric invoice number
+    raw_invoice_number: str = ""  # Exact raw imported value
     invoice_date: Optional[date] = None
     raw_invoice_date: Optional[str] = None
     invoice_type: str = "B2B"
@@ -51,6 +53,7 @@ class InvoiceRecord:
 @dataclass
 class MatchRecord:
     """Reconciliation comparison result pairing Source A and/or Source B records."""
+
     match_id: str = field(default_factory=lambda: str(uuid.uuid4()))
     project_id: str = ""
     match_status: MatchStatus = MatchStatus.MATCHED
@@ -83,6 +86,7 @@ class MatchRecord:
 @dataclass
 class ReconciliationSummary:
     """Aggregated financial and count metrics for a reconciliation run."""
+
     run_id: str = field(default_factory=lambda: str(uuid.uuid4()))
     project_name: str = "Default Project"
     created_at: str = ""
@@ -110,8 +114,8 @@ class ReconciliationSummary:
     # Net Discrepancies
     net_diff_taxable: Decimal = Decimal("0.00")
     net_diff_tax: Decimal = Decimal("0.00")
-    itc_at_risk_amount: Decimal = Decimal("0.00")      # Tax missing in 2B
-    unclaimed_itc_amount: Decimal = Decimal("0.00")    # Tax missing in Books
+    itc_at_risk_amount: Decimal = Decimal("0.00")  # Tax missing in 2B
+    unclaimed_itc_amount: Decimal = Decimal("0.00")  # Tax missing in Books
 
     # Match items
     matches: List[MatchRecord] = field(default_factory=list)
@@ -126,6 +130,7 @@ class ReconciliationSummary:
 @dataclass
 class MappingProfile:
     """User-saved reusable column mapping configuration."""
+
     profile_id: str = field(default_factory=lambda: str(uuid.uuid4()))
     profile_name: str = ""
     description: str = ""

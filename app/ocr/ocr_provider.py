@@ -3,11 +3,13 @@
 from abc import ABC, abstractmethod
 from dataclasses import dataclass, field
 from pathlib import Path
-from typing import Any, Dict, Optional
+from typing import Any, Dict
+
 
 @dataclass
 class OCRResult:
     """Extracted text and metadata from an OCR scan."""
+
     text: str
     confidence: float = 0.0
     provider_name: str = ""

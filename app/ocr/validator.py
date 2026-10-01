@@ -1,18 +1,22 @@
 """OCR Text Post-Processing, Field Extraction, and Validation."""
 
-from datetime import date
-from decimal import Decimal
 import re
-from typing import Dict, Optional, Tuple
+from typing import Dict, Optional
 
-from app.normalization.date_parser import parse_date
-from app.normalization.gstin import normalize_gstin, validate_gstin
+from app.normalization.gstin import normalize_gstin
 from app.normalization.invoice_no import normalize_invoice_number
 
 GSTIN_PATTERN = re.compile(r"\b([0-9]{2}[A-Z]{5}[0-9]{4}[A-Z]{1}[1-9A-Z]{1}Z[0-9A-Z]{1})\b")
-INVOICE_PATTERN = re.compile(r"(?:Invoice|Inv|Bill|Voucher)\s*(?:No|Number|#)?[:.\s]*([A-Z0-9\/\-_]+)", re.IGNORECASE)
-DATE_PATTERN = re.compile(r"(?:Date)[:.\s]*([0-9]{1,2}[-\/.][0-9]{1,2}[-\/.][0-9]{2,4})", re.IGNORECASE)
-AMOUNT_PATTERN = re.compile(r"(?:Taxable|Total|Gross)[:.\s]*(?:Rs\.?|INR|₹)?\s*([0-9,]+\.[0-9]{2})", re.IGNORECASE)
+INVOICE_PATTERN = re.compile(
+    r"(?:Invoice|Inv|Bill|Voucher)\s*(?:No|Number|#)?[:.\s]*([A-Z0-9\/\-_]+)", re.IGNORECASE
+)
+DATE_PATTERN = re.compile(
+    r"(?:Date)[:.\s]*([0-9]{1,2}[-\/.][0-9]{1,2}[-\/.][0-9]{2,4})", re.IGNORECASE
+)
+AMOUNT_PATTERN = re.compile(
+    r"(?:Taxable|Total|Gross)[:.\s]*(?:Rs\.?|INR|₹)?\s*([0-9,]+\.[0-9]{2})", re.IGNORECASE
+)
+
 
 class OCRFieldExtractor:
     """Extracts structured invoice fields from raw OCR text."""

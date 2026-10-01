@@ -1,13 +1,13 @@
 """Ingestion package for heterogeneous tabular files."""
 
 from pathlib import Path
-from typing import Any, Dict, List, Optional, Tuple
 
 from app.core.exceptions import UnsupportedFileFormatError
 from app.ingestion.csv_reader import CSVReader
 from app.ingestion.excel_reader import ExcelReader
 from app.ingestion.pdf_reader import PDFReader
 from app.ingestion.reader_base import BaseTabularReader
+
 
 def get_reader_for_file(file_path: Path) -> BaseTabularReader:
     """Factory to return appropriate reader for a given file extension."""
@@ -21,8 +21,9 @@ def get_reader_for_file(file_path: Path) -> BaseTabularReader:
     else:
         raise UnsupportedFileFormatError(
             f"Unsupported file format '{suffix}'. Supported: .xlsx, .xls, .csv, .tsv, .pdf",
-            user_friendly_message=f"The format '{suffix}' is not supported. Please provide an Excel (.xlsx), CSV, or PDF file."
+            user_friendly_message=f"The format '{suffix}' is not supported. Please provide an Excel (.xlsx), CSV, or PDF file.",
         )
+
 
 __all__ = [
     "BaseTabularReader",

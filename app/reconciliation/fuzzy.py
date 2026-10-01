@@ -5,6 +5,7 @@ from typing import Tuple
 
 try:
     from rapidfuzz import fuzz
+
     HAS_RAPIDFUZZ = True
 except ImportError:
     HAS_RAPIDFUZZ = False
@@ -12,7 +13,7 @@ except ImportError:
 
 def compute_string_similarity(str1: str, str2: str) -> float:
     """Compute similarity ratio between 0.0 and 1.0 using Token Sort / Levenshtein.
-    
+
     Case-insensitive and whitespace-tolerant.
     """
     if not str1 or not str2:
@@ -36,11 +37,7 @@ def compute_string_similarity(str1: str, str2: str) -> float:
         return difflib.SequenceMatcher(None, tokens1, tokens2).ratio()
 
 
-def is_fuzzy_match(
-    inv1: str,
-    inv2: str,
-    threshold: float = 0.85
-) -> Tuple[bool, float]:
+def is_fuzzy_match(inv1: str, inv2: str, threshold: float = 0.85) -> Tuple[bool, float]:
     """Determine if two invoice strings match under fuzzy threshold."""
     score = compute_string_similarity(inv1, inv2)
     return (score >= threshold, score)

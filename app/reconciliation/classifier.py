@@ -2,9 +2,11 @@
 
 from decimal import Decimal
 from typing import List, Tuple
+
 from app.core.config import Tolerances
 from app.domain.enums import DiscrepancyType
 from app.domain.models import InvoiceRecord
+
 
 class DiscrepancyClassifier:
     """Classifies differences into granular discrepancy types and formats plain English explanations."""
@@ -22,7 +24,7 @@ class DiscrepancyClassifier:
         diff_total_tax: Decimal,
         diff_total_val: Decimal,
         tolerances: Tolerances,
-        match_level: str
+        match_level: str,
     ) -> Tuple[List[DiscrepancyType], str]:
         """Examine differences and produce discrepancy tags with a human explanation."""
         discrepancies: List[DiscrepancyType] = []
@@ -30,7 +32,9 @@ class DiscrepancyClassifier:
 
         if abs(diff_taxable) > tolerances.taxable:
             discrepancies.append(DiscrepancyType.TAXABLE_VALUE_MISMATCH)
-            notes.append(f"Taxable value differs by ₹{diff_taxable:+.2f} (exceeds ₹{tolerances.taxable} tolerance)")
+            notes.append(
+                f"Taxable value differs by ₹{diff_taxable:+.2f} (exceeds ₹{tolerances.taxable} tolerance)"
+            )
 
         if abs(diff_igst) > tolerances.igst:
             discrepancies.append(DiscrepancyType.IGST_MISMATCH)
@@ -53,18 +57,24 @@ class DiscrepancyClassifier:
             days_diff = abs((rec_b.invoice_date - rec_a.invoice_date).days)
             if days_diff > tolerances.date_days:
                 discrepancies.append(DiscrepancyType.DATE_MISMATCH)
-                notes.append(f"Invoice date differs by {days_diff} days ({rec_a.invoice_date} vs {rec_b.invoice_date})")
+                notes.append(
+                    f"Invoice date differs by {days_diff} days ({rec_a.invoice_date} vs {rec_b.invoice_date})"
+                )
 
         # Invoice number formatting difference
         if rec_a.raw_invoice_number.strip().upper() != rec_b.raw_invoice_number.strip().upper():
             if match_level in ("STRONG", "NORMALIZED", "FUZZY"):
                 discrepancies.append(DiscrepancyType.INVOICE_NUMBER_MISMATCH)
-                notes.append(f"Invoice formatting variation: '{rec_a.raw_invoice_number}' in 2B vs '{rec_b.raw_invoice_number}' in Books")
+                notes.append(
+                    f"Invoice formatting variation: '{rec_a.raw_invoice_number}' in 2B vs '{rec_b.raw_invoice_number}' in Books"
+                )
 
         # GSTIN comparison
         if rec_a.supplier_gstin != rec_b.supplier_gstin:
             discrepancies.append(DiscrepancyType.GSTIN_MISMATCH)
-            notes.append(f"Supplier GSTIN differs: '{rec_a.supplier_gstin}' vs '{rec_b.supplier_gstin}'")
+            notes.append(
+                f"Supplier GSTIN differs: '{rec_a.supplier_gstin}' vs '{rec_b.supplier_gstin}'"
+            )
 
         if not discrepancies:
             if abs(diff_taxable) > Decimal("0.00") or abs(diff_total_tax) > Decimal("0.00"):

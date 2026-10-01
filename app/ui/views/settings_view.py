@@ -1,6 +1,7 @@
 """Settings and Preferences View."""
 
 from decimal import Decimal
+
 from PySide6.QtWidgets import (
     QCheckBox,
     QDoubleSpinBox,
@@ -17,7 +18,8 @@ from PySide6.QtWidgets import (
     QWidget,
 )
 
-from app.core.config import AppConfig, Tolerances
+from app.core.config import AppConfig
+
 
 class SettingsView(QWidget):
     """Configuration interface for tolerances, OCR, and application preferences."""
@@ -113,7 +115,9 @@ class SettingsView(QWidget):
         layout.addStretch()
 
     def _browse_tesseract(self):
-        path_str, _ = QFileDialog.getOpenFileName(self, "Locate tesseract.exe", "", "Executables (*.exe);;All Files (*.*)")
+        path_str, _ = QFileDialog.getOpenFileName(
+            self, "Locate tesseract.exe", "", "Executables (*.exe);;All Files (*.*)"
+        )
         if path_str:
             self.txt_tess.setText(path_str)
 

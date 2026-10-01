@@ -1,11 +1,13 @@
 """Performance and stress benchmark for large reconciliation datasets."""
 
+import time
 from datetime import date, timedelta
 from decimal import Decimal
-import time
+
 from app.core.config import Tolerances
 from app.domain.models import InvoiceRecord
 from app.reconciliation.engine import ReconciliationEngine
+
 
 def test_large_dataset_performance():
     """Benchmark reconciliation speed on 10,000 invoices."""
@@ -48,13 +50,17 @@ def test_large_dataset_performance():
         records_a.append(rec_a)
         records_b.append(rec_b)
 
-    engine = ReconciliationEngine(tolerances=Tolerances(taxable=Decimal("5.00"), total_tax=Decimal("2.00")))
+    engine = ReconciliationEngine(
+        tolerances=Tolerances(taxable=Decimal("5.00"), total_tax=Decimal("2.00"))
+    )
 
     start_time = time.perf_counter()
     summary = engine.reconcile(records_a, records_b)
     elapsed = time.perf_counter() - start_time
 
-    print(f"\n[BENCHMARK] Reconciled 20,000 total records in {elapsed:.3f} seconds ({len(records_a) / elapsed:.0f} rec/sec)")
+    print(
+        f"\n[BENCHMARK] Reconciled 20,000 total records in {elapsed:.3f} seconds ({len(records_a) / elapsed:.0f} rec/sec)"
+    )
     assert summary.total_matched == 10000
     # Must complete in under 2.5 seconds
     assert elapsed < 2.5

@@ -1,7 +1,7 @@
 """Professional Styled Excel Audit Workbook Generator."""
 
 from pathlib import Path
-from decimal import Decimal
+
 import openpyxl  # type: ignore
 from openpyxl.styles import Alignment, Border, Font, PatternFill, Side  # type: ignore
 from openpyxl.utils import get_column_letter  # type: ignore
@@ -11,11 +11,11 @@ from app.domain.enums import MatchStatus
 from app.domain.models import MatchRecord, ReconciliationSummary
 
 # Color Palette for Accounting Spreadsheet
-COLOR_HEADER_BG = "1E293B"     # Dark Slate
-COLOR_HEADER_FG = "FFFFFF"     # White
-COLOR_MATCHED_BG = "D1FAE5"    # Soft Emerald
+COLOR_HEADER_BG = "1E293B"  # Dark Slate
+COLOR_HEADER_FG = "FFFFFF"  # White
+COLOR_MATCHED_BG = "D1FAE5"  # Soft Emerald
 COLOR_MATCHED_FG = "065F46"
-COLOR_DIFF_BG = "FEF3C7"       # Soft Amber
+COLOR_DIFF_BG = "FEF3C7"  # Soft Amber
 COLOR_DIFF_FG = "92400E"
 COLOR_MISSING_A_BG = "FEE2E2"  # Soft Red
 COLOR_MISSING_A_FG = "991B1B"
@@ -34,7 +34,9 @@ def _apply_header_style(ws, row_idx: int, col_count: int) -> None:
     for col in range(1, col_count + 1):
         cell = ws.cell(row=row_idx, column=col)
         cell.font = Font(name="Segoe UI", size=11, bold=True, color=COLOR_HEADER_FG)
-        cell.fill = PatternFill(start_color=COLOR_HEADER_BG, end_color=COLOR_HEADER_BG, fill_type="solid")
+        cell.fill = PatternFill(
+            start_color=COLOR_HEADER_BG, end_color=COLOR_HEADER_BG, fill_type="solid"
+        )
         cell.alignment = Alignment(horizontal="center", vertical="center", wrap_text=True)
 
 
@@ -71,7 +73,11 @@ class ExcelExporter:
             ws_mismatch = wb.create_sheet(title="Tax Differences")
             cls._build_match_table_sheet(
                 ws_mismatch,
-                [m for m in summary.matches if m.match_status == MatchStatus.MATCHED_WITH_DIFFERENCE],
+                [
+                    m
+                    for m in summary.matches
+                    if m.match_status == MatchStatus.MATCHED_WITH_DIFFERENCE
+                ],
                 title="Matched Invoices with Differences (Exceeding Tolerance)",
             )
 
@@ -113,7 +119,7 @@ class ExcelExporter:
             wb.save(output_path)
             return output_path
         except Exception as e:
-            raise ExportError(f"Failed to generate Excel report: {e}")
+            raise ExportError(f"Failed to generate Excel report: {e}") from e
 
     @classmethod
     def _build_summary_sheet(cls, ws, summary: ReconciliationSummary) -> None:
@@ -144,21 +150,53 @@ class ExcelExporter:
         # KPI Metrics Table
         headers = ["Reconciliation Metric", "Invoice Count", "Percentage", "Financial Impact"]
         for c_idx, h in enumerate(headers, 1):
-            cell = ws.cell(row=8, column=c_idx, value=h)
+            ws.cell(row=8, column=c_idx, value=h)
         _apply_header_style(ws, 8, len(headers))
         ws.row_dimensions[8].height = 24
 
         rows_data = [
-            ("Matched (Within Tolerance)", summary.total_matched, f"{summary.match_rate_percentage}%", f"₹ {summary.total_taxable_a:,.2f}"),
-            ("Matched with Differences", summary.total_matched_with_diff, f"{(summary.total_matched_with_diff / max(summary.total_processed, 1) * 100):.1f}%", f"₹ {summary.net_diff_tax:,.2f} Delta"),
-            ("ITC at Risk (Missing in GSTR-2B)", summary.total_missing_in_a, f"{(summary.total_missing_in_a / max(summary.total_processed, 1) * 100):.1f}%", f"₹ {summary.itc_at_risk_amount:,.2f}"),
-            ("Unclaimed ITC (Missing in Books)", summary.total_missing_in_b, f"{(summary.total_missing_in_b / max(summary.total_processed, 1) * 100):.1f}%", f"₹ {summary.unclaimed_itc_amount:,.2f}"),
-            ("Duplicates in Source A / B", summary.total_duplicates_a + summary.total_duplicates_b, "N/A", "Review Required"),
-            ("Total Records Processed", summary.total_processed, "100.0%", f"Portal: {summary.total_records_a} | Books: {summary.total_records_b}"),
+            (
+                "Matched (Within Tolerance)",
+                summary.total_matched,
+                f"{summary.match_rate_percentage}%",
+                f"₹ {summary.total_taxable_a:,.2f}",
+            ),
+            (
+                "Matched with Differences",
+                summary.total_matched_with_diff,
+                f"{(summary.total_matched_with_diff / max(summary.total_processed, 1) * 100):.1f}%",
+                f"₹ {summary.net_diff_tax:,.2f} Delta",
+            ),
+            (
+                "ITC at Risk (Missing in GSTR-2B)",
+                summary.total_missing_in_a,
+                f"{(summary.total_missing_in_a / max(summary.total_processed, 1) * 100):.1f}%",
+                f"₹ {summary.itc_at_risk_amount:,.2f}",
+            ),
+            (
+                "Unclaimed ITC (Missing in Books)",
+                summary.total_missing_in_b,
+                f"{(summary.total_missing_in_b / max(summary.total_processed, 1) * 100):.1f}%",
+                f"₹ {summary.unclaimed_itc_amount:,.2f}",
+            ),
+            (
+                "Duplicates in Source A / B",
+                summary.total_duplicates_a + summary.total_duplicates_b,
+                "N/A",
+                "Review Required",
+            ),
+            (
+                "Total Records Processed",
+                summary.total_processed,
+                "100.0%",
+                f"Portal: {summary.total_records_a} | Books: {summary.total_records_b}",
+            ),
         ]
 
         for r_idx, row in enumerate(rows_data, 9):
-            ws.cell(row=r_idx, column=1, value=row[0]).font = Font(name="Segoe UI", size=10, bold=(r_idx == 14))
+            ws.cell(row=r_idx, column=1, value=row[0]).font = Font(
+                name="Segoe UI", size=10, bold=(r_idx == 14)
+            )
             ws.cell(row=r_idx, column=2, value=row[1]).alignment = Alignment(horizontal="right")
             ws.cell(row=r_idx, column=3, value=row[2]).alignment = Alignment(horizontal="right")
             ws.cell(row=r_idx, column=4, value=row[3]).alignment = Alignment(horizontal="right")
@@ -198,12 +236,16 @@ class ExcelExporter:
             ra = m.record_a
             rb = m.record_b
 
-            gstin = (rb.supplier_gstin if rb else (ra.supplier_gstin if ra else ""))
-            name = (rb.supplier_name if rb and rb.supplier_name else (ra.supplier_name if ra else ""))
+            gstin = rb.supplier_gstin if rb else (ra.supplier_gstin if ra else "")
+            name = rb.supplier_name if rb and rb.supplier_name else (ra.supplier_name if ra else "")
             inv_a = ra.raw_invoice_number if ra else ""
             inv_b = rb.raw_invoice_number if rb else ""
             rec_for_date = rb if (rb and rb.invoice_date) else ra
-            inv_date = rec_for_date.invoice_date.isoformat() if (rec_for_date and rec_for_date.invoice_date) else ""
+            inv_date = (
+                rec_for_date.invoice_date.isoformat()
+                if (rec_for_date and rec_for_date.invoice_date)
+                else ""
+            )
 
             taxable_a = float(ra.taxable_value) if ra else 0.0
             taxable_b = float(rb.taxable_value) if rb else 0.0

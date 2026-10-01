@@ -1,11 +1,13 @@
 """SQLite Database Engine with WAL mode and Session Factory."""
 
 from pathlib import Path
+
 from sqlalchemy import create_engine, event
 from sqlalchemy.engine import Engine
-from sqlalchemy.orm import declarative_base, sessionmaker, Session
+from sqlalchemy.orm import Session, sessionmaker
 
 from app.core.config import get_default_data_dir
+
 
 @event.listens_for(Engine, "connect")
 def set_sqlite_pragma(dbapi_connection, connection_record):

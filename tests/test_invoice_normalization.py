@@ -2,6 +2,7 @@
 
 from app.normalization.invoice_no import extract_alphanumeric_core, normalize_invoice_number
 
+
 def test_normalize_invoice_number():
     assert normalize_invoice_number("  inv/2026/0042  ") == "INV/2026/42"
     assert normalize_invoice_number("INV-0001") == "INV/1"

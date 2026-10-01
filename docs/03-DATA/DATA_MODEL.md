@@ -10,22 +10,23 @@ from decimal import Decimal
 from datetime import date
 from typing import Optional, Dict, Any
 
+
 @dataclass
 class InvoiceRecord:
     # System Identifiers
-    record_id: str                      # UUID v4
-    source_id: str                      # 'source_a' or 'source_b'
-    source_file: str                    # Original filename
-    source_row: int                     # 1-indexed source row number
+    record_id: str  # UUID v4
+    source_id: str  # 'source_a' or 'source_b'
+    source_file: str  # Original filename
+    source_row: int  # 1-indexed source row number
 
     # Core Identifiers
-    supplier_gstin: str                 # 15-character normalized GSTIN
-    supplier_name: Optional[str]        # Trade / Legal Name
-    buyer_gstin: Optional[str]          # Recipient GSTIN
-    invoice_number: str                 # Normalized alphanumeric invoice string
-    raw_invoice_number: str             # Untouched raw string as imported
-    invoice_date: Optional[date]        # Standardized ISO date
-    invoice_type: str                   # 'B2B', 'CDNR', 'SEZWP', 'SEZWOP', etc.
+    supplier_gstin: str  # 15-character normalized GSTIN
+    supplier_name: Optional[str]  # Trade / Legal Name
+    buyer_gstin: Optional[str]  # Recipient GSTIN
+    invoice_number: str  # Normalized alphanumeric invoice string
+    raw_invoice_number: str  # Untouched raw string as imported
+    invoice_date: Optional[date]  # Standardized ISO date
+    invoice_type: str  # 'B2B', 'CDNR', 'SEZWP', 'SEZWOP', etc.
 
     # Financial Attributes (Strict Decimal)
     taxable_value: Decimal = Decimal("0.00")
@@ -37,9 +38,9 @@ class InvoiceRecord:
     total_invoice_value: Decimal = Decimal("0.00")
 
     # Statutory & Geographical Attributes
-    place_of_supply: Optional[str] = None # 2-digit state code or name
+    place_of_supply: Optional[str] = None  # 2-digit state code or name
     reverse_charge: bool = False
-    itc_eligibility: Optional[str] = None # 'GSTR-2B ITC Available', etc.
+    itc_eligibility: Optional[str] = None  # 'GSTR-2B ITC Available', etc.
 
     # Validation & Raw Snapshot
     is_valid_gstin: bool = True
@@ -58,13 +59,13 @@ The `MatchRecord` represents the reconciliation result of joining or isolating r
 class MatchRecord:
     match_id: str
     project_id: str
-    match_status: str                   # MATCHED, MATCHED_WITH_DIFFERENCE, MISSING_IN_SOURCE_A, etc.
-    match_level: str                    # EXACT, STRONG, NORMALIZED, FUZZY, NONE
-    confidence_score: float             # 0.0 to 1.0
+    match_status: str  # MATCHED, MATCHED_WITH_DIFFERENCE, MISSING_IN_SOURCE_A, etc.
+    match_level: str  # EXACT, STRONG, NORMALIZED, FUZZY, NONE
+    confidence_score: float  # 0.0 to 1.0
 
     # Linked Entities
-    record_a: Optional[InvoiceRecord]   # Record from Source A (e.g. Portal GSTR-2B)
-    record_b: Optional[InvoiceRecord]   # Record from Source B (e.g. ERP Purchase Register)
+    record_a: Optional[InvoiceRecord]  # Record from Source A (e.g. Portal GSTR-2B)
+    record_b: Optional[InvoiceRecord]  # Record from Source B (e.g. ERP Purchase Register)
 
     # Financial Deltas (Record B minus Record A)
     diff_taxable: Decimal = Decimal("0.00")
@@ -80,7 +81,7 @@ class MatchRecord:
     explanation: str = ""
 
     # User Review State
-    review_status: str = "OPEN"         # OPEN, REVIEWED, ACCEPTED, REJECTED, IGNORED
+    review_status: str = "OPEN"  # OPEN, REVIEWED, ACCEPTED, REJECTED, IGNORED
     review_note: Optional[str] = None
     reviewed_at: Optional[str] = None
 ```

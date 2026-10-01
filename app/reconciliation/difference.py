@@ -1,9 +1,11 @@
 """Financial and tax difference calculation engine using Decimal arithmetic."""
 
-from decimal import Decimal, ROUND_HALF_UP
+from decimal import ROUND_HALF_UP, Decimal
 from typing import Tuple
+
 from app.core.config import Tolerances
 from app.domain.models import InvoiceRecord
+
 
 def round_currency(val: Decimal) -> Decimal:
     """Round decimal value to 2 decimal places using standard half-up rounding."""
@@ -11,12 +13,10 @@ def round_currency(val: Decimal) -> Decimal:
 
 
 def calculate_differences(
-    rec_a: InvoiceRecord,
-    rec_b: InvoiceRecord,
-    tolerances: Tolerances
+    rec_a: InvoiceRecord, rec_b: InvoiceRecord, tolerances: Tolerances
 ) -> Tuple[Decimal, Decimal, Decimal, Decimal, Decimal, Decimal, Decimal, bool]:
     """Calculate monetary differences: Record B (Books) minus Record A (Portal).
-    
+
     Returns:
         (diff_taxable, diff_igst, diff_cgst, diff_sgst, diff_cess, diff_total_tax, diff_total_val, is_within_tolerance)
     """
@@ -30,8 +30,12 @@ def calculate_differences(
     tax_b = rec_b.calculate_total_tax()
     diff_total_tax = round_currency(tax_b - tax_a)
 
-    val_a = rec_a.total_invoice_value if rec_a.total_invoice_value else (rec_a.taxable_value + tax_a)
-    val_b = rec_b.total_invoice_value if rec_b.total_invoice_value else (rec_b.taxable_value + tax_b)
+    val_a = (
+        rec_a.total_invoice_value if rec_a.total_invoice_value else (rec_a.taxable_value + tax_a)
+    )
+    val_b = (
+        rec_b.total_invoice_value if rec_b.total_invoice_value else (rec_b.taxable_value + tax_b)
+    )
     diff_total_val = round_currency(val_b - val_a)
 
     # Check whether all differences are within user-configured tolerances
@@ -44,13 +48,13 @@ def calculate_differences(
     within_val = abs(diff_total_val) <= tolerances.total_value
 
     is_within = (
-        within_taxable and
-        within_igst and
-        within_cgst and
-        within_sgst and
-        within_cess and
-        within_tax and
-        within_val
+        within_taxable
+        and within_igst
+        and within_cgst
+        and within_sgst
+        and within_cess
+        and within_tax
+        and within_val
     )
 
     return (
@@ -61,5 +65,5 @@ def calculate_differences(
         diff_cess,
         diff_total_tax,
         diff_total_val,
-        is_within
+        is_within,
     )

@@ -1,15 +1,11 @@
 """Executive Dashboard View displaying high-level KPIs and discrepancy breakdown."""
 
-from typing import Optional
 from PySide6.QtCore import Qt, Signal
 from PySide6.QtWidgets import (
-    QFrame,
-    QGridLayout,
     QHBoxLayout,
     QHeaderView,
     QLabel,
     QPushButton,
-    QScrollArea,
     QTableWidget,
     QTableWidgetItem,
     QVBoxLayout,
@@ -18,6 +14,7 @@ from PySide6.QtWidgets import (
 
 from app.domain.models import ReconciliationSummary
 from app.ui.components.cards import MetricCard
+
 
 class DashboardView(QWidget):
     """Executive Dashboard with financial summary cards and discrepancy statistics."""
@@ -74,7 +71,9 @@ class DashboardView(QWidget):
         hdr_layout.addStretch()
 
         btn_demo = QPushButton("Load Demo Data")
-        btn_demo.setStyleSheet("background-color: #334155; color: #f8fafc; border: 1px solid #475569;")
+        btn_demo.setStyleSheet(
+            "background-color: #334155; color: #f8fafc; border: 1px solid #475569;"
+        )
         btn_demo.clicked.connect(self.load_demo_requested.emit)
         hdr_layout.addWidget(btn_demo)
 
@@ -90,7 +89,9 @@ class DashboardView(QWidget):
         cards_layout.setSpacing(16)
 
         self.card_total = MetricCard("Total Invoices", "0", "Awaiting ingestion", "#3b82f6")
-        self.card_matched = MetricCard("Matched Rate", "0.0%", "0 matched within tolerance", "#10b981")
+        self.card_matched = MetricCard(
+            "Matched Rate", "0.0%", "0 matched within tolerance", "#10b981"
+        )
         self.card_risk = MetricCard("ITC At Risk", "₹ 0.00", "Missing in GSTR-2B", "#ef4444")
         self.card_diff = MetricCard("Tax Difference", "₹ 0.00", "Net value discrepancy", "#f59e0b")
 
@@ -103,15 +104,27 @@ class DashboardView(QWidget):
 
         # Discrepancy Breakdown Section
         lbl_breakdown = QLabel("Discrepancy Breakdown & Statutory Impact")
-        lbl_breakdown.setStyleSheet("font-size: 15px; font-weight: bold; color: #e2e8f0; margin-top: 10px;")
+        lbl_breakdown.setStyleSheet(
+            "font-size: 15px; font-weight: bold; color: #e2e8f0; margin-top: 10px;"
+        )
         main_layout.addWidget(lbl_breakdown)
 
         self.table_breakdown = QTableWidget(5, 4)
-        self.table_breakdown.setHorizontalHeaderLabels(["Category", "Invoice Count", "Percentage", "Financial Exposure"])
-        self.table_breakdown.horizontalHeader().setSectionResizeMode(0, QHeaderView.ResizeMode.Stretch)
-        self.table_breakdown.horizontalHeader().setSectionResizeMode(1, QHeaderView.ResizeMode.ResizeToContents)
-        self.table_breakdown.horizontalHeader().setSectionResizeMode(2, QHeaderView.ResizeMode.ResizeToContents)
-        self.table_breakdown.horizontalHeader().setSectionResizeMode(3, QHeaderView.ResizeMode.Stretch)
+        self.table_breakdown.setHorizontalHeaderLabels(
+            ["Category", "Invoice Count", "Percentage", "Financial Exposure"]
+        )
+        self.table_breakdown.horizontalHeader().setSectionResizeMode(
+            0, QHeaderView.ResizeMode.Stretch
+        )
+        self.table_breakdown.horizontalHeader().setSectionResizeMode(
+            1, QHeaderView.ResizeMode.ResizeToContents
+        )
+        self.table_breakdown.horizontalHeader().setSectionResizeMode(
+            2, QHeaderView.ResizeMode.ResizeToContents
+        )
+        self.table_breakdown.horizontalHeader().setSectionResizeMode(
+            3, QHeaderView.ResizeMode.Stretch
+        )
         self.table_breakdown.verticalHeader().setVisible(False)
         self.table_breakdown.setEditTriggers(QTableWidget.EditTrigger.NoEditTriggers)
 
@@ -119,32 +132,59 @@ class DashboardView(QWidget):
 
     def update_summary(self, summary: ReconciliationSummary):
         """Populate dashboard widgets with latest reconciliation metrics."""
-        self.lbl_subtitle.setText(f"Project: {summary.project_name} | Reconciled at {summary.created_at}")
+        self.lbl_subtitle.setText(
+            f"Project: {summary.project_name} | Reconciled at {summary.created_at}"
+        )
 
         self.card_total.update_values(
             f"{summary.total_processed:,}",
-            f"Portal: {summary.total_records_a:,} | Books: {summary.total_records_b:,}"
+            f"Portal: {summary.total_records_a:,} | Books: {summary.total_records_b:,}",
         )
         self.card_matched.update_values(
             f"{summary.match_rate_percentage:.1f}%",
-            f"{summary.total_matched:,} Invoices matched within tolerance"
+            f"{summary.total_matched:,} Invoices matched within tolerance",
         )
         self.card_risk.update_values(
             f"₹ {summary.itc_at_risk_amount:,.2f}",
-            f"{summary.total_missing_in_a:,} Invoices missing in GSTR-2B"
+            f"{summary.total_missing_in_a:,} Invoices missing in GSTR-2B",
         )
         self.card_diff.update_values(
             f"₹ {summary.net_diff_tax:,.2f}",
-            f"Across {summary.total_matched_with_diff:,} difference records"
+            f"Across {summary.total_matched_with_diff:,} difference records",
         )
 
         # Update breakdown table rows
         rows = [
-            ("Matched (Within Configured Tolerance)", str(summary.total_matched), f"{summary.match_rate_percentage:.1f}%", f"₹ {summary.total_taxable_a:,.2f} Taxable Value"),
-            ("Matched with Monetary Differences", str(summary.total_matched_with_diff), f"{(summary.total_matched_with_diff / max(summary.total_processed, 1) * 100):.1f}%", f"₹ {summary.net_diff_tax:,.2f} Net Delta"),
-            ("ITC at Risk (Missing in GSTR-2B)", str(summary.total_missing_in_a), f"{(summary.total_missing_in_a / max(summary.total_processed, 1) * 100):.1f}%", f"₹ {summary.itc_at_risk_amount:,.2f} (Action: Follow up with supplier)"),
-            ("Unclaimed ITC (Missing in Purchase Register)", str(summary.total_missing_in_b), f"{(summary.total_missing_in_b / max(summary.total_processed, 1) * 100):.1f}%", f"₹ {summary.unclaimed_itc_amount:,.2f} (Action: Book in ERP)"),
-            ("Duplicates in Source Files", str(summary.total_duplicates_a + summary.total_duplicates_b), "N/A", "Potential duplicate payment / excess ITC risk"),
+            (
+                "Matched (Within Configured Tolerance)",
+                str(summary.total_matched),
+                f"{summary.match_rate_percentage:.1f}%",
+                f"₹ {summary.total_taxable_a:,.2f} Taxable Value",
+            ),
+            (
+                "Matched with Monetary Differences",
+                str(summary.total_matched_with_diff),
+                f"{(summary.total_matched_with_diff / max(summary.total_processed, 1) * 100):.1f}%",
+                f"₹ {summary.net_diff_tax:,.2f} Net Delta",
+            ),
+            (
+                "ITC at Risk (Missing in GSTR-2B)",
+                str(summary.total_missing_in_a),
+                f"{(summary.total_missing_in_a / max(summary.total_processed, 1) * 100):.1f}%",
+                f"₹ {summary.itc_at_risk_amount:,.2f} (Action: Follow up with supplier)",
+            ),
+            (
+                "Unclaimed ITC (Missing in Purchase Register)",
+                str(summary.total_missing_in_b),
+                f"{(summary.total_missing_in_b / max(summary.total_processed, 1) * 100):.1f}%",
+                f"₹ {summary.unclaimed_itc_amount:,.2f} (Action: Book in ERP)",
+            ),
+            (
+                "Duplicates in Source Files",
+                str(summary.total_duplicates_a + summary.total_duplicates_b),
+                "N/A",
+                "Potential duplicate payment / excess ITC risk",
+            ),
         ]
 
         for r_idx, row in enumerate(rows):

@@ -9,10 +9,20 @@ from app.core.exceptions import IngestionError
 from app.ingestion.reader_base import BaseTabularReader
 
 GST_HEADER_KEYWORDS = [
-    "gstin", "invoice", "taxable", "igst", "cgst", "sgst", "bill", "voucher", "party", "supplier"
+    "gstin",
+    "invoice",
+    "taxable",
+    "igst",
+    "cgst",
+    "sgst",
+    "bill",
+    "voucher",
+    "party",
+    "supplier",
 ]
 
 ENCODINGS = ["utf-8-sig", "utf-8", "cp1252", "latin-1"]
+
 
 class CSVReader(BaseTabularReader):
     """Parses delimited text files (.csv, .tsv, .txt)."""
@@ -63,9 +73,7 @@ class CSVReader(BaseTabularReader):
         best_match_count = 0
         for idx, row in enumerate(raw_rows[:15]):
             text_cells = [c.lower() for c in row if c]
-            match_count = sum(
-                1 for c in text_cells if any(kw in c for kw in GST_HEADER_KEYWORDS)
-            )
+            match_count = sum(1 for c in text_cells if any(kw in c for kw in GST_HEADER_KEYWORDS))
             if match_count > best_match_count:
                 best_match_count = match_count
                 header_row_idx = idx
@@ -75,11 +83,11 @@ class CSVReader(BaseTabularReader):
         for i, h in enumerate(raw_headers):
             val = h.strip()
             if not val:
-                val = f"Column_{i+1}"
+                val = f"Column_{i + 1}"
             headers.append(val)
 
         data_rows: List[Dict[str, Any]] = []
-        for row in raw_rows[header_row_idx + 1:]:
+        for row in raw_rows[header_row_idx + 1 :]:
             if not any(c.strip() for c in row if c):
                 continue
 
@@ -91,7 +99,9 @@ class CSVReader(BaseTabularReader):
                     row_dict[h] = None
 
             # Skip trailing totals
-            first_val = str(next((v for v in row_dict.values() if v is not None), "")).strip().lower()
+            first_val = (
+                str(next((v for v in row_dict.values() if v is not None), "")).strip().lower()
+            )
             if first_val in ("total", "grand total", "sub total"):
                 continue
 

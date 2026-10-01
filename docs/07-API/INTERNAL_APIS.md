@@ -17,20 +17,17 @@ source_a_invoices = service.ingest_file(
     file_path=Path("tests/fixtures/gstr2b_sample.xlsx"),
     source_id="source_a",
     sheet_name="B2B",
-    custom_mapping={"GSTIN of Supplier": "supplier_gstin", "Invoice number": "invoice_number"}
+    custom_mapping={"GSTIN of Supplier": "supplier_gstin", "Invoice number": "invoice_number"},
 )
 
 source_b_invoices = service.ingest_file(
-    file_path=Path("tests/fixtures/purchase_register_sample.xlsx"),
-    source_id="source_b"
+    file_path=Path("tests/fixtures/purchase_register_sample.xlsx"), source_id="source_b"
 )
 
 # Execute reconciliation
 tolerances = Tolerances(taxable=5.0, tax=2.0)
 summary = service.reconcile(
-    records_a=source_a_invoices,
-    records_b=source_b_invoices,
-    tolerances=tolerances
+    records_a=source_a_invoices, records_b=source_b_invoices, tolerances=tolerances
 )
 
 # Access summary metrics

@@ -2,6 +2,7 @@ import subprocess
 import sys
 from pathlib import Path
 
+
 def build():
     root = Path(__file__).parent.resolve()
     entry_point = root / "app" / "ui" / "app.py"
@@ -14,8 +15,8 @@ def build():
         "--name=GSTReconciler",
         "--noconfirm",
         "--clean",
-        "--windowed",                 # Non-console GUI window
-        "--onedir",                   # High performance directory mode
+        "--windowed",  # Non-console GUI window
+        "--onedir",  # High performance directory mode
         f"--add-data={root / 'demo'};demo",
         "--collect-all=openpyxl",
         "--collect-all=rapidfuzz",

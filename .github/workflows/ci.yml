@@ -3,6 +3,7 @@ name: CI & Packaging Pipeline
 on:
   push:
     branches: [ main, master ]
+    tags: [ 'v*' ]
   pull_request:
     branches: [ main, master ]
   release:
@@ -36,12 +37,12 @@ jobs:
 
     - name: Run Pytest Test Suite
       run: |
-        pytest -v --cov=app --cov-report=xml
+        python -m pytest -v --cov=app --cov-report=xml
 
   build-windows:
     needs: test
     runs-on: windows-latest
-    if: github.event_name == 'release' || github.ref == 'refs/heads/main'
+    if: startsWith(github.ref, 'refs/tags/') || github.event_name == 'release' || github.ref == 'refs/heads/main'
 
     steps:
     - uses: actions/checkout@v4
@@ -66,3 +67,16 @@ jobs:
       with:
         name: GSTReconciler-Windows-Dist
         path: dist/
+
+    - name: Compress Release Archive
+      if: startsWith(github.ref, 'refs/tags/') || github.event_name == 'release'
+      run: |
+        Compress-Archive -Path dist/GSTReconciler -DestinationPath GSTReconciler-Windows-x64.zip -Force
+
+    - name: Upload Binaries to GitHub Release
+      if: startsWith(github.ref, 'refs/tags/') || github.event_name == 'release'
+      uses: softprops/action-gh-release@v2
+      with:
+        files: GSTReconciler-Windows-x64.zip
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

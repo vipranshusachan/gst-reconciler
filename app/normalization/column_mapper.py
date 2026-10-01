@@ -2,6 +2,7 @@
 
 import re
 from typing import Dict, List, Optional, Tuple
+
 from app.domain.models import MappingProfile
 
 # Canonical target field definitions
@@ -129,9 +130,7 @@ class ColumnMapper:
         return h
 
     @classmethod
-    def detect_mappings(
-        cls, headers: List[str]
-    ) -> Tuple[Dict[str, str], Dict[str, float]]:
+    def detect_mappings(cls, headers: List[str]) -> Tuple[Dict[str, str], Dict[str, float]]:
         """Map raw header names to canonical field keys.
 
         Returns:
@@ -206,9 +205,7 @@ class ColumnMapper:
                 confidences[canonical_target] = 1.0
 
         # Auto-detect remaining unmapped columns
-        detected, detected_conf = cls.detect_mappings(
-            [h for h in headers if h not in mappings]
-        )
+        detected, detected_conf = cls.detect_mappings([h for h in headers if h not in mappings])
         mappings.update(detected)
         confidences.update(detected_conf)
 

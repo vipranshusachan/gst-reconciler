@@ -1,23 +1,21 @@
 """Repository for database operations on Projects, Runs, Matches, and Profiles."""
 
 import json
+from datetime import datetime
 from decimal import Decimal
 from typing import List, Optional
-from datetime import datetime
 
-from app.domain.enums import DiscrepancyType, MatchLevel, MatchStatus, ReviewStatus
+from app.database.db import DatabaseManager
+from app.database.schema import (
+    MappingProfileEntity,
+    MatchRecordEntity,
+    ReconciliationRunEntity,
+)
+from app.domain.enums import ReviewStatus
 from app.domain.models import (
     InvoiceRecord,
     MappingProfile,
-    MatchRecord,
     ReconciliationSummary,
-)
-from app.database.db import DatabaseManager
-from app.database.schema import (
-    MatchRecordEntity,
-    MappingProfileEntity,
-    ProjectEntity,
-    ReconciliationRunEntity,
 )
 
 
@@ -56,6 +54,7 @@ def _deserialize_invoice(raw_json: Optional[str]) -> Optional[InvoiceRecord]:
         return None
     d = json.loads(raw_json)
     from datetime import date
+
     d_date = date.fromisoformat(d["invoice_date"]) if d.get("invoice_date") else None
     return InvoiceRecord(
         record_id=d["record_id"],
@@ -97,34 +96,36 @@ class ReconciliationRepository:
                 project_id=None,
                 source_a_file=summary.source_a_file,
                 source_b_file=summary.source_b_file,
-                summary_json=json.dumps({
-                    "total_records_a": summary.total_records_a,
-                    "total_records_b": summary.total_records_b,
-                    "total_processed": summary.total_processed,
-                    "total_matched": summary.total_matched,
-                    "total_matched_with_diff": summary.total_matched_with_diff,
-                    "total_missing_in_a": summary.total_missing_in_a,
-                    "total_missing_in_b": summary.total_missing_in_b,
-                    "total_duplicates_a": summary.total_duplicates_a,
-                    "total_duplicates_b": summary.total_duplicates_b,
-                    "itc_at_risk_amount": str(summary.itc_at_risk_amount),
-                    "unclaimed_itc_amount": str(summary.unclaimed_itc_amount),
-                    "net_diff_taxable": str(summary.net_diff_taxable),
-                    "net_diff_tax": str(summary.net_diff_tax),
-                }),
+                summary_json=json.dumps(
+                    {
+                        "total_records_a": summary.total_records_a,
+                        "total_records_b": summary.total_records_b,
+                        "total_processed": summary.total_processed,
+                        "total_matched": summary.total_matched,
+                        "total_matched_with_diff": summary.total_matched_with_diff,
+                        "total_missing_in_a": summary.total_missing_in_a,
+                        "total_missing_in_b": summary.total_missing_in_b,
+                        "total_duplicates_a": summary.total_duplicates_a,
+                        "total_duplicates_b": summary.total_duplicates_b,
+                        "itc_at_risk_amount": str(summary.itc_at_risk_amount),
+                        "unclaimed_itc_amount": str(summary.unclaimed_itc_amount),
+                        "net_diff_taxable": str(summary.net_diff_taxable),
+                        "net_diff_tax": str(summary.net_diff_tax),
+                    }
+                ),
             )
             session.add(run_entity)
 
             for m in summary.matches:
                 gstin = (
-                    m.record_b.supplier_gstin if m.record_b else (
-                        m.record_a.supplier_gstin if m.record_a else ""
-                    )
+                    m.record_b.supplier_gstin
+                    if m.record_b
+                    else (m.record_a.supplier_gstin if m.record_a else "")
                 )
                 inv_no = (
-                    m.record_b.raw_invoice_number if m.record_b else (
-                        m.record_a.raw_invoice_number if m.record_a else ""
-                    )
+                    m.record_b.raw_invoice_number
+                    if m.record_b
+                    else (m.record_a.raw_invoice_number if m.record_a else "")
                 )
 
                 match_entity = MatchRecordEntity(
@@ -158,19 +159,23 @@ class ReconciliationRepository:
             entity = session.query(MatchRecordEntity).filter_by(id=match_id).first()
             if not entity:
                 return False
-            setattr(entity, "review_status", status.value)
-            setattr(entity, "review_note", note or "")
-            setattr(entity, "reviewed_at", datetime.now())
+            entity.review_status = status.value
+            entity.review_note = note or ""
+            entity.reviewed_at = datetime.now()
             session.commit()
             return True
 
     def save_mapping_profile(self, profile: MappingProfile) -> None:
         """Save or update a reusable column mapping profile."""
         with self.db.get_session() as session:
-            existing = session.query(MappingProfileEntity).filter_by(profile_name=profile.profile_name).first()
+            existing = (
+                session.query(MappingProfileEntity)
+                .filter_by(profile_name=profile.profile_name)
+                .first()
+            )
             if existing:
-                setattr(existing, "mappings_json", json.dumps(profile.mappings))
-                setattr(existing, "description", profile.description)
+                existing.mappings_json = json.dumps(profile.mappings)
+                existing.description = profile.description
             else:
                 entity = MappingProfileEntity(
                     id=profile.profile_id,

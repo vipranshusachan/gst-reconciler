@@ -1,7 +1,6 @@
 """Tesseract OCR Provider."""
 
 from pathlib import Path
-from typing import Any, Dict
 
 from app.core.exceptions import OCRError
 from app.ocr.ocr_provider import OCRProvider, OCRResult
@@ -9,9 +8,11 @@ from app.ocr.ocr_provider import OCRProvider, OCRResult
 try:
     import pytesseract
     from PIL import Image
+
     HAS_TESSERACT = True
 except ImportError:
     HAS_TESSERACT = False
+
 
 class TesseractOCRProvider(OCRProvider):
     """Local Tesseract OCR engine implementation."""
@@ -36,8 +37,8 @@ class TesseractOCRProvider(OCRProvider):
     def extract_text(self, file_path: Path) -> OCRResult:
         if not self.is_available():
             raise OCRError(
-                f"Tesseract OCR engine is not installed or configured on this system.",
-                user_friendly_message="OCR engine is not available. Please install Tesseract or provide digital Excel/CSV files."
+                "Tesseract OCR engine is not installed or configured on this system.",
+                user_friendly_message="OCR engine is not available. Please install Tesseract or provide digital Excel/CSV files.",
             )
 
         try:
@@ -56,4 +57,4 @@ class TesseractOCRProvider(OCRProvider):
                 metadata={"total_words": len(confs)},
             )
         except Exception as e:
-            raise OCRError(f"OCR extraction failed on {file_path.name}: {e}")
+            raise OCRError(f"OCR extraction failed on {file_path.name}: {e}") from e

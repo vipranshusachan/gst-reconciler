@@ -1,10 +1,8 @@
 """Issue Explorer View for browsing, filtering, and investigating reconciled records."""
 
-from typing import List, Optional
-from PySide6.QtCore import Qt, Signal
+from PySide6.QtCore import Signal
 from PySide6.QtWidgets import (
     QButtonGroup,
-    QFrame,
     QHBoxLayout,
     QHeaderView,
     QLabel,
@@ -15,10 +13,11 @@ from PySide6.QtWidgets import (
     QWidget,
 )
 
-from app.domain.enums import MatchStatus, ReviewStatus
-from app.domain.models import MatchRecord, ReconciliationSummary
+from app.domain.enums import MatchStatus
+from app.domain.models import ReconciliationSummary
 from app.ui.models.table_model import ReconciledTableModel
 from app.ui.views.comparison_dialog import ComparisonDialog
+
 
 class IssueExplorerView(QWidget):
     """High-density data grid for exploring issues and manual audit resolution."""
@@ -133,7 +132,9 @@ class IssueExplorerView(QWidget):
         self.table_model = ReconciledTableModel()
         self.table_view = QTableView()
         self.table_view.setModel(self.table_model)
-        self.table_view.horizontalHeader().setSectionResizeMode(QHeaderView.ResizeMode.ResizeToContents)
+        self.table_view.horizontalHeader().setSectionResizeMode(
+            QHeaderView.ResizeMode.ResizeToContents
+        )
         self.table_view.horizontalHeader().setSectionResizeMode(14, QHeaderView.ResizeMode.Stretch)
         self.table_view.verticalHeader().setVisible(False)
         self.table_view.setSelectionBehavior(QTableView.SelectionBehavior.SelectRows)
@@ -143,7 +144,9 @@ class IssueExplorerView(QWidget):
         layout.addWidget(self.table_view)
 
         # Bottom Hint Bar
-        hint = QLabel("💡 Tip: Double-click any row to view Side-by-Side invoice field comparison and take resolution action.")
+        hint = QLabel(
+            "💡 Tip: Double-click any row to view Side-by-Side invoice field comparison and take resolution action."
+        )
         hint.setStyleSheet("color: #64748b; font-size: 11px;")
         layout.addWidget(hint)
 
