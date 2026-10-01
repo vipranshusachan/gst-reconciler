@@ -11,12 +11,6 @@ authors = [
     { name = "Open Source GST Reconciler Community" }
 ]
 license = { text = "Apache-2.0" }
-[project.urls]
-Homepage = "https://github.com/vipranshusachan/gst-reconciler"
-Documentation = "https://github.com/vipranshusachan/gst-reconciler#readme"
-Repository = "https://github.com/vipranshusachan/gst-reconciler.git"
-Issues = "https://github.com/vipranshusachan/gst-reconciler/issues"
-
 classifiers = [
     "Development Status :: 5 - Production/Stable",
     "Environment :: Win32 (MS Windows)",
@@ -39,6 +33,12 @@ dependencies = [
     "rapidfuzz>=3.5.0",
     "click>=8.1.0",
 ]
+
+[project.urls]
+Homepage = "https://github.com/vipranshusachan/gst-reconciler"
+Documentation = "https://github.com/vipranshusachan/gst-reconciler#readme"
+Repository = "https://github.com/vipranshusachan/gst-reconciler.git"
+Issues = "https://github.com/vipranshusachan/gst-reconciler/issues"
 
 [project.optional-dependencies]
 ocr = [
