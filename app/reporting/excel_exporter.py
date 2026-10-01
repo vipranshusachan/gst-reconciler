@@ -2,9 +2,9 @@
 
 from pathlib import Path
 from decimal import Decimal
-import openpyxl
-from openpyxl.styles import Alignment, Border, Font, PatternFill, Side
-from openpyxl.utils import get_column_letter
+import openpyxl  # type: ignore
+from openpyxl.styles import Alignment, Border, Font, PatternFill, Side  # type: ignore
+from openpyxl.utils import get_column_letter  # type: ignore
 
 from app.core.exceptions import ExportError
 from app.domain.enums import MatchStatus
