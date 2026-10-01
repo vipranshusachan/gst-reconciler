@@ -1,0 +1,41 @@
+name: Bug Report
+description: Create a report to help us improve GST Reconciler
+labels: ["bug"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for taking the time to fill out this bug report!
+        **DO NOT paste real client invoices, personal identification numbers, or confidential taxpayer data.**
+  - type: input
+    id: version
+    attributes:
+      label: GST Reconciler Version
+      placeholder: "e.g., 1.0.0"
+    validations:
+      required: true
+  - type: dropdown
+    id: os
+    attributes:
+      label: Operating System
+      options:
+        - Windows 11
+        - Windows 10
+        - Windows Server
+        - Other
+    validations:
+      required: true
+  - type: textarea
+    id: what-happened
+    attributes:
+      label: What happened?
+      description: Also tell us what you expected to happen.
+    validations:
+      required: true
+  - type: textarea
+    id: reproduction
+    attributes:
+      label: Steps to Reproduce
+      description: List the steps to reproduce the issue using synthetic/anonymized sample files.
+    validations:
+      required: true
