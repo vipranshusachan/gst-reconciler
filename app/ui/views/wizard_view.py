@@ -110,37 +110,56 @@ class WizardView(QWidget):
 
         self.setStyleSheet("""
             QWidget {
-                background-color: #0f172a;
-                color: #f8fafc;
-                font-family: 'Segoe UI', sans-serif;
+                background-color: #f8fafc;
+                color: #0f172a;
+                font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
             }
             QFrame {
-                background-color: #1e293b;
-                border: 1px solid #334155;
-                border-radius: 8px;
+                background-color: #ffffff;
+                border: 1px solid #e2e8f0;
+                border-radius: 10px;
             }
             QLineEdit, QComboBox, QDoubleSpinBox, QSpinBox {
-                background-color: #0f172a;
-                border: 1px solid #334155;
+                background-color: #ffffff;
+                border: 1px solid #cbd5e1;
                 border-radius: 6px;
-                padding: 6px 10px;
-                color: #f8fafc;
+                padding: 7px 10px;
+                color: #0f172a;
+                font-size: 13px;
+            }
+            QLineEdit:focus, QComboBox:focus, QDoubleSpinBox:focus, QSpinBox:focus {
+                border-color: #2563eb;
+            }
+            QTableWidget {
+                background-color: #ffffff;
+                color: #1e293b;
+                border: 1px solid #e2e8f0;
+                border-radius: 8px;
+                gridline-color: #f1f5f9;
+            }
+            QHeaderView::section {
+                background-color: #f1f5f9;
+                color: #334155;
+                font-weight: 700;
+                padding: 8px;
+                border: none;
+                border-bottom: 2px solid #e2e8f0;
             }
             QPushButton {
-                padding: 8px 18px;
+                padding: 9px 18px;
                 border-radius: 6px;
-                font-weight: bold;
+                font-weight: 600;
                 font-size: 13px;
             }
         """)
 
         layout = QVBoxLayout(self)
-        layout.setContentsMargins(36, 24, 36, 24)
-        layout.setSpacing(16)
+        layout.setContentsMargins(36, 28, 36, 28)
+        layout.setSpacing(18)
 
         # Wizard Title & Step Indicator
-        self.lbl_step = QLabel("Step 1 of 4: Select Reconciliation Source Files")
-        self.lbl_step.setStyleSheet("font-size: 18px; font-weight: bold; color: #38bdf8;")
+        self.lbl_step = QLabel("Step 1 of 4: Select Reconciliation Files")
+        self.lbl_step.setStyleSheet("font-size: 20px; font-weight: 800; color: #0f172a;")
         layout.addWidget(self.lbl_step)
 
         # Stacked Pages
@@ -154,20 +173,54 @@ class WizardView(QWidget):
         # Bottom Wizard Navigation Bar
         nav_layout = QHBoxLayout()
         self.btn_cancel = QPushButton("Cancel")
-        self.btn_cancel.setStyleSheet("background-color: #334155; color: #94a3b8;")
+        self.btn_cancel.setStyleSheet("""
+            QPushButton {
+                background-color: #ffffff;
+                color: #64748b;
+                border: 1px solid #cbd5e1;
+            }
+            QPushButton:hover {
+                background-color: #f1f5f9;
+                color: #0f172a;
+            }
+        """)
         self.btn_cancel.clicked.connect(self.cancel_requested.emit)
         nav_layout.addWidget(self.btn_cancel)
 
         nav_layout.addStretch()
 
         self.btn_prev = QPushButton("← Back")
-        self.btn_prev.setStyleSheet("background-color: #334155; color: #f8fafc;")
+        self.btn_prev.setStyleSheet("""
+            QPushButton {
+                background-color: #ffffff;
+                color: #334155;
+                border: 1px solid #cbd5e1;
+            }
+            QPushButton:hover {
+                background-color: #f1f5f9;
+            }
+            QPushButton:disabled {
+                background-color: #f8fafc;
+                color: #cbd5e1;
+                border-color: #e2e8f0;
+            }
+        """)
         self.btn_prev.setEnabled(False)
         self.btn_prev.clicked.connect(self._go_prev)
         nav_layout.addWidget(self.btn_prev)
 
         self.btn_next = QPushButton("Next: Verify Columns →")
-        self.btn_next.setStyleSheet("background-color: #3b82f6; color: white;")
+        self.btn_next.setStyleSheet("""
+            QPushButton {
+                background-color: #2563eb;
+                color: #ffffff;
+                border: none;
+                font-weight: 700;
+            }
+            QPushButton:hover {
+                background-color: #1d4ed8;
+            }
+        """)
         self.btn_next.clicked.connect(self._go_next)
         nav_layout.addWidget(self.btn_next)
 
@@ -179,25 +232,43 @@ class WizardView(QWidget):
     def _build_step1_page(self) -> QWidget:
         page = QWidget()
         p_layout = QVBoxLayout(page)
-        p_layout.setSpacing(16)
+        p_layout.setSpacing(18)
 
         # Source A Box (Portal GSTR-2B)
         frame_a = QFrame()
+        frame_a.setStyleSheet(
+            "background-color: #ffffff; border: 1px solid #e2e8f0; border-radius: 10px; padding: 16px;"
+        )
         lay_a = QVBoxLayout(frame_a)
-        lay_a.addWidget(QLabel("<b>Source A: GST Portal Return (GSTR-2B / GSTR-1)</b>"))
+        lay_a.setSpacing(8)
+
+        lbl_a_title = QLabel("📁  <b>Source 1: GST Portal Return (GSTR-2B / GSTR-1)</b>")
+        lbl_a_title.setStyleSheet("font-size: 14px; color: #0f172a;")
+        lay_a.addWidget(lbl_a_title)
+
+        lbl_a_hint = QLabel(
+            "Download your monthly GSTR-2B Excel or CSV return file from the government GST portal (gst.gov.in)."
+        )
+        lbl_a_hint.setStyleSheet("font-size: 12px; color: #64748b;")
+        lay_a.addWidget(lbl_a_hint)
+
         h_a = QHBoxLayout()
         self.txt_path_a = QLineEdit()
         self.txt_path_a.setReadOnly(True)
-        self.txt_path_a.setPlaceholderText("Select GSTR-2B Excel or CSV file...")
+        self.txt_path_a.setPlaceholderText("Select downloaded GSTR-2B Excel or CSV file...")
         h_a.addWidget(self.txt_path_a)
-        btn_browse_a = QPushButton("Browse...")
+        btn_browse_a = QPushButton("Browse File...")
+        btn_browse_a.setStyleSheet(
+            "background-color: #f1f5f9; color: #1e293b; border: 1px solid #cbd5e1;"
+        )
         btn_browse_a.clicked.connect(lambda: self._browse_file("A"))
         h_a.addWidget(btn_browse_a)
         lay_a.addLayout(h_a)
 
         sheet_h_a = QHBoxLayout()
-        sheet_h_a.addWidget(QLabel("Sheet Name:"))
+        sheet_h_a.addWidget(QLabel("Excel Sheet Tab:"))
         self.combo_sheet_a = QComboBox()
+        self.combo_sheet_a.setMinimumWidth(200)
         sheet_h_a.addWidget(self.combo_sheet_a)
         sheet_h_a.addStretch()
         lay_a.addLayout(sheet_h_a)
@@ -205,23 +276,41 @@ class WizardView(QWidget):
 
         # Source B Box (Purchase Register)
         frame_b = QFrame()
-        lay_b = QVBoxLayout(frame_b)
-        lay_b.addWidget(
-            QLabel("<b>Source B: Internal Accounting Books (Purchase / Sales Register)</b>")
+        frame_b.setStyleSheet(
+            "background-color: #ffffff; border: 1px solid #e2e8f0; border-radius: 10px; padding: 16px;"
         )
+        lay_b = QVBoxLayout(frame_b)
+        lay_b.setSpacing(8)
+
+        lbl_b_title = QLabel(
+            "📚  <b>Source 2: Accounting Purchase Register (Tally / Busy / SAP / ERP)</b>"
+        )
+        lbl_b_title.setStyleSheet("font-size: 14px; color: #0f172a;")
+        lay_b.addWidget(lbl_b_title)
+
+        lbl_b_hint = QLabel(
+            "Export your purchase ledger or bills list from your accounting software (Excel or CSV)."
+        )
+        lbl_b_hint.setStyleSheet("font-size: 12px; color: #64748b;")
+        lay_b.addWidget(lbl_b_hint)
+
         h_b = QHBoxLayout()
         self.txt_path_b = QLineEdit()
         self.txt_path_b.setReadOnly(True)
-        self.txt_path_b.setPlaceholderText("Select Purchase Register Excel or CSV file...")
+        self.txt_path_b.setPlaceholderText("Select internal Purchase Register Excel or CSV file...")
         h_b.addWidget(self.txt_path_b)
-        btn_browse_b = QPushButton("Browse...")
+        btn_browse_b = QPushButton("Browse File...")
+        btn_browse_b.setStyleSheet(
+            "background-color: #f1f5f9; color: #1e293b; border: 1px solid #cbd5e1;"
+        )
         btn_browse_b.clicked.connect(lambda: self._browse_file("B"))
         h_b.addWidget(btn_browse_b)
         lay_b.addLayout(h_b)
 
         sheet_h_b = QHBoxLayout()
-        sheet_h_b.addWidget(QLabel("Sheet Name:"))
+        sheet_h_b.addWidget(QLabel("Excel Sheet Tab:"))
         self.combo_sheet_b = QComboBox()
+        self.combo_sheet_b.setMinimumWidth(200)
         sheet_h_b.addWidget(self.combo_sheet_b)
         sheet_h_b.addStretch()
         lay_b.addLayout(sheet_h_b)
@@ -262,16 +351,19 @@ class WizardView(QWidget):
     def _build_step2_page(self) -> QWidget:
         page = QWidget()
         p_layout = QVBoxLayout(page)
+        p_layout.setSpacing(12)
 
         desc = QLabel(
-            "Confirm that each accounting attribute is mapped to the right column in your files."
+            "💡 <b>Auto-Detected Columns:</b> Check that each required accounting field maps correctly to your spreadsheet columns."
         )
-        desc.setStyleSheet("color: #94a3b8; font-size: 12px;")
+        desc.setStyleSheet(
+            "color: #1e40af; font-size: 12px; background-color: #eff6ff; padding: 10px 14px; border-radius: 6px; border: 1px solid #bfdbfe;"
+        )
         p_layout.addWidget(desc)
 
         self.table_map = QTableWidget(len(CANONICAL_FIELDS), 3)
         self.table_map.setHorizontalHeaderLabels(
-            ["Accounting Attribute", "Source A (Portal) Column", "Source B (Books) Column"]
+            ["Accounting Attribute", "Portal GSTR-2B Column", "Purchase Register Column"]
         )
         self.table_map.horizontalHeader().setSectionResizeMode(0, QHeaderView.ResizeMode.Stretch)
         self.table_map.horizontalHeader().setSectionResizeMode(1, QHeaderView.ResizeMode.Stretch)
@@ -320,31 +412,64 @@ class WizardView(QWidget):
     def _build_step3_page(self) -> QWidget:
         page = QWidget()
         p_layout = QVBoxLayout(page)
+        p_layout.setSpacing(14)
+
+        desc = QLabel(
+            "⚙️ <b>Set Practical Accounting Tolerances:</b> Real-world invoices often have minor rounding differences (paise) or billing date delays."
+        )
+        desc.setStyleSheet(
+            "color: #1e40af; font-size: 12px; background-color: #eff6ff; padding: 10px 14px; border-radius: 6px; border: 1px solid #bfdbfe;"
+        )
+        p_layout.addWidget(desc)
 
         frame = QFrame()
+        frame.setStyleSheet(
+            "background-color: #ffffff; border: 1px solid #e2e8f0; border-radius: 10px; padding: 20px;"
+        )
         grid = QGridLayout(frame)
         grid.setSpacing(16)
 
-        grid.addWidget(QLabel("<b>Taxable Value Tolerance (₹):</b>"), 0, 0)
+        grid.addWidget(
+            QLabel(
+                "<b>Taxable Value Tolerance (₹):</b><br><small style='color:#64748b;'>Acceptable rupee difference in base value</small>"
+            ),
+            0,
+            0,
+        )
         self.spin_taxable = QDoubleSpinBox()
         self.spin_taxable.setRange(0.0, 100.0)
         self.spin_taxable.setValue(5.0)
         grid.addWidget(self.spin_taxable, 0, 1)
 
-        grid.addWidget(QLabel("<b>Tax Amount Tolerance (₹):</b>"), 1, 0)
+        grid.addWidget(
+            QLabel(
+                "<b>Tax Amount Tolerance (₹):</b><br><small style='color:#64748b;'>Acceptable difference for CGST/SGST/IGST paise rounding</small>"
+            ),
+            1,
+            0,
+        )
         self.spin_tax = QDoubleSpinBox()
         self.spin_tax.setRange(0.0, 50.0)
         self.spin_tax.setValue(2.0)
         grid.addWidget(self.spin_tax, 1, 1)
 
-        grid.addWidget(QLabel("<b>Invoice Date Tolerance (Days):</b>"), 2, 0)
+        grid.addWidget(
+            QLabel(
+                "<b>Invoice Date Window (Days):</b><br><small style='color:#64748b;'>Accounts entry delay vs vendor bill date</small>"
+            ),
+            2,
+            0,
+        )
         self.spin_date = QSpinBox()
         self.spin_date.setRange(0, 90)
         self.spin_date.setValue(30)
         grid.addWidget(self.spin_date, 2, 1)
 
-        self.chk_fuzzy = QCheckBox("Enable Gated Fuzzy Matching (Levenshtein Token Ratio >= 85%)")
+        self.chk_fuzzy = QCheckBox(
+            "Enable Smart Invoice Matcher (Handles punctuation like 'INV/001' vs 'INV-1')"
+        )
         self.chk_fuzzy.setChecked(True)
+        self.chk_fuzzy.setStyleSheet("color: #0f172a; font-weight: 600; font-size: 13px;")
         grid.addWidget(self.chk_fuzzy, 3, 0, 1, 2)
 
         p_layout.addWidget(frame)
@@ -359,9 +484,11 @@ class WizardView(QWidget):
         p_layout = QVBoxLayout(page)
         p_layout.addStretch()
 
-        self.lbl_progress = QLabel("Initializing reconciliation...")
+        self.lbl_progress = QLabel("Initializing reconciliation engine...")
         self.lbl_progress.setAlignment(Qt.AlignmentFlag.AlignCenter)
-        self.lbl_progress.setStyleSheet("font-size: 14px; font-weight: bold; color: #38bdf8;")
+        self.lbl_progress.setStyleSheet(
+            "font-size: 16px; font-weight: 800; color: #2563eb; margin-bottom: 10px;"
+        )
         p_layout.addWidget(self.lbl_progress)
 
         self.progress_bar = QProgressBar()
@@ -369,15 +496,16 @@ class WizardView(QWidget):
         self.progress_bar.setValue(0)
         self.progress_bar.setStyleSheet("""
             QProgressBar {
-                border: 1px solid #334155;
-                border-radius: 6px;
+                border: 1px solid #cbd5e1;
+                border-radius: 8px;
                 text-align: center;
-                height: 24px;
-                background-color: #1e293b;
-                color: #f8fafc;
+                height: 26px;
+                background-color: #ffffff;
+                color: #0f172a;
+                font-weight: bold;
             }
             QProgressBar::chunk {
-                background-color: #3b82f6;
+                background-color: #2563eb;
                 border-radius: 6px;
             }
         """)

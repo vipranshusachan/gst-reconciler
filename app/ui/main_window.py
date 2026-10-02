@@ -39,9 +39,9 @@ class MainWindow(QMainWindow):
         self.resize(1280, 800)
         self.setMinimumSize(1024, 650)
 
-        # Central Container
+        # Central Container (Bright & Clean Enterprise Canvas)
         central_widget = QWidget()
-        central_widget.setStyleSheet("background-color: #0f172a;")
+        central_widget.setStyleSheet("background-color: #f8fafc; color: #0f172a;")
         self.setCentralWidget(central_widget)
 
         root_layout = QHBoxLayout(central_widget)
@@ -80,43 +80,44 @@ class MainWindow(QMainWindow):
         sidebar.setFixedWidth(240)
         sidebar.setStyleSheet("""
             QFrame {
-                background-color: #1e293b;
-                border-right: 1px solid #334155;
+                background-color: #0f172a;
+                border-right: 1px solid #1e293b;
             }
             QPushButton {
                 text-align: left;
                 padding: 12px 18px;
                 border: none;
-                border-radius: 6px;
-                color: #94a3b8;
+                border-radius: 8px;
+                color: #cbd5e1;
                 font-size: 13px;
                 font-weight: 600;
                 background-color: transparent;
             }
             QPushButton:hover {
-                background-color: #334155;
-                color: #f8fafc;
+                background-color: #1e293b;
+                color: #ffffff;
             }
             QPushButton:checked {
-                background-color: #3b82f6;
+                background-color: #2563eb;
                 color: #ffffff;
+                font-weight: 700;
             }
         """)
 
         lay = QVBoxLayout(sidebar)
-        lay.setContentsMargins(16, 24, 16, 24)
-        lay.setSpacing(6)
+        lay.setContentsMargins(18, 24, 18, 24)
+        lay.setSpacing(8)
 
         # Brand Logo / Title
         brand_box = QVBoxLayout()
         lbl_app = QLabel("GST RECONCILER")
         lbl_app.setStyleSheet(
-            "color: #38bdf8; font-size: 16px; font-weight: 800; letter-spacing: 1px;"
+            "color: #60a5fa; font-size: 17px; font-weight: 800; letter-spacing: 1px;"
         )
         brand_box.addWidget(lbl_app)
 
-        lbl_desc = QLabel("Offline Tax Matcher")
-        lbl_desc.setStyleSheet("color: #64748b; font-size: 11px;")
+        lbl_desc = QLabel("Intelligent Tax Matcher")
+        lbl_desc.setStyleSheet("color: #94a3b8; font-size: 12px; font-weight: 500;")
         brand_box.addWidget(lbl_desc)
         lay.addLayout(brand_box)
 

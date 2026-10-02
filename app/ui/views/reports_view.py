@@ -27,52 +27,66 @@ class ReportsView(QWidget):
 
         self.setStyleSheet("""
             QWidget {
-                background-color: #0f172a;
-                color: #f8fafc;
-                font-family: 'Segoe UI', sans-serif;
+                background-color: #f8fafc;
+                color: #0f172a;
+                font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
             }
             QFrame {
-                background-color: #1e293b;
-                border: 1px solid #334155;
-                border-radius: 8px;
+                background-color: #ffffff;
+                border: 1px solid #e2e8f0;
+                border-radius: 10px;
                 padding: 20px;
             }
             QPushButton {
-                padding: 10px 20px;
+                padding: 11px 22px;
                 border-radius: 6px;
-                font-weight: bold;
+                font-weight: 700;
                 font-size: 13px;
+                border: none;
             }
         """)
 
         layout = QVBoxLayout(self)
-        layout.setContentsMargins(36, 24, 36, 24)
+        layout.setContentsMargins(36, 28, 36, 28)
         layout.setSpacing(20)
 
         # Header
         lbl_title = QLabel("Audit Reports & Data Export")
-        lbl_title.setStyleSheet("font-size: 20px; font-weight: bold; color: #f8fafc;")
+        lbl_title.setStyleSheet("font-size: 22px; font-weight: 800; color: #0f172a;")
         layout.addWidget(lbl_title)
 
         desc = QLabel(
-            "Generate audit-ready spreadsheets and data pipelines from the latest reconciliation run."
+            "Download audit-ready spreadsheets for filing, supplier communication, and internal accounting records."
         )
-        desc.setStyleSheet("color: #94a3b8; font-size: 13px;")
+        desc.setStyleSheet("color: #64748b; font-size: 13px; font-weight: 500;")
         layout.addWidget(desc)
 
         # Excel Export Card
         card_excel = QFrame()
         lay_ex = QVBoxLayout(card_excel)
-        lay_ex.addWidget(QLabel("<b>Excel Audit Workbook (.xlsx)</b>"))
+        lay_ex.setSpacing(10)
+        lbl_ex_hdr = QLabel("📊  <b>Complete GST Audit Workbook (.xlsx)</b>")
+        lbl_ex_hdr.setStyleSheet("font-size: 15px; color: #0f172a;")
+        lay_ex.addWidget(lbl_ex_hdr)
+
         lbl_ex_desc = QLabel(
-            "Comprehensive multi-tab Excel file containing Executive Summary, Itemized Mismatches, ITC at Risk, Unclaimed ITC, and Matched sheets with financial color tags."
+            "Multi-tab Excel workbook formatted for CAs and Tax Auditors. Contains dedicated sheets for: "
+            "<b>Executive Summary, Matched Invoices, Tax Discrepancies, ITC at Risk (for supplier follow-up), and Unclaimed Invoices (for Tally entry).</b>"
         )
-        lbl_ex_desc.setStyleSheet("color: #94a3b8; font-size: 12px;")
+        lbl_ex_desc.setStyleSheet("color: #475569; font-size: 12px; line-height: 1.4;")
         lbl_ex_desc.setWordWrap(True)
         lay_ex.addWidget(lbl_ex_desc)
 
-        btn_excel = QPushButton("Export Formatted Excel Report 📊")
-        btn_excel.setStyleSheet("background-color: #10b981; color: white;")
+        btn_excel = QPushButton("Export Multi-Tab Excel Report 📊")
+        btn_excel.setStyleSheet("""
+            QPushButton {
+                background-color: #16a34a;
+                color: #ffffff;
+            }
+            QPushButton:hover {
+                background-color: #15803d;
+            }
+        """)
         btn_excel.clicked.connect(self._export_excel)
         lay_ex.addWidget(btn_excel)
         layout.addWidget(card_excel)
@@ -80,16 +94,29 @@ class ReportsView(QWidget):
         # CSV Export Card
         card_csv = QFrame()
         lay_csv = QVBoxLayout(card_csv)
-        lay_csv.addWidget(QLabel("<b>Raw Reconciled Ledger (.csv)</b>"))
+        lay_csv.setSpacing(10)
+        lbl_csv_hdr = QLabel("📄  <b>Raw Reconciled Ledger (.csv)</b>")
+        lbl_csv_hdr.setStyleSheet("font-size: 15px; color: #0f172a;")
+        lay_csv.addWidget(lbl_csv_hdr)
+
         lbl_csv_desc = QLabel(
-            "Flat CSV format for importing into ERPs, custom business intelligence pipelines, or database ingestion."
+            "Standard tabular CSV file containing every reconciled invoice, match confidence score, delta amounts, and audit notes. "
+            "Ideal for importing directly into custom ERP databases or reporting software."
         )
-        lbl_csv_desc.setStyleSheet("color: #94a3b8; font-size: 12px;")
+        lbl_csv_desc.setStyleSheet("color: #475569; font-size: 12px; line-height: 1.4;")
         lbl_csv_desc.setWordWrap(True)
         lay_csv.addWidget(lbl_csv_desc)
 
-        btn_csv = QPushButton("Export Flat CSV File 📄")
-        btn_csv.setStyleSheet("background-color: #3b82f6; color: white;")
+        btn_csv = QPushButton("Export Reconciled CSV File 📄")
+        btn_csv.setStyleSheet("""
+            QPushButton {
+                background-color: #2563eb;
+                color: #ffffff;
+            }
+            QPushButton:hover {
+                background-color: #1d4ed8;
+            }
+        """)
         btn_csv.clicked.connect(self._export_csv)
         lay_csv.addWidget(btn_csv)
         layout.addWidget(card_csv)

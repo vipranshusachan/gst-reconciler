@@ -15,11 +15,11 @@
 ### Option 1: Direct Single-File .exe (Recommended for Clients & Accountants)
 *No installation, no zip extraction, no Python required!*
 
-1. **[Direct Download GSTReconciler.exe](https://github.com/vipranshusachan/gst-reconciler/releases/download/v1.0.0/GSTReconciler.exe)**
+1. **[Direct Download GSTReconciler.exe (v1.1.0 - Bright Clean UI)](https://github.com/vipranshusachan/gst-reconciler/releases/download/v1.1.0/GSTReconciler.exe)**
 2. Simply double-click **`GSTReconciler.exe`** and the application starts immediately!
-3. *(Optional)* Click **"Load Demo Sample"** inside the app to see immediate reconciliation results!
+3. *(Optional)* Click **"Load Sample Demo"** inside the app to see immediate reconciliation results!
 
-*(Prefer a ZIP archive? Download [GSTReconciler-v1.0.0-windows-x64.zip](https://github.com/vipranshusachan/gst-reconciler/releases/download/v1.0.0/GSTReconciler-v1.0.0-windows-x64.zip))*
+*(Prefer a ZIP archive? Download [GSTReconciler-v1.1.0-windows-x64.zip](https://github.com/vipranshusachan/gst-reconciler/releases/download/v1.1.0/GSTReconciler-v1.1.0-windows-x64.zip))*
 
 ---
 

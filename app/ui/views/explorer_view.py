@@ -28,53 +28,62 @@ class IssueExplorerView(QWidget):
         super().__init__(parent)
         self.setStyleSheet("""
             QWidget {
-                background-color: #0f172a;
-                color: #f8fafc;
-                font-family: 'Segoe UI', sans-serif;
+                background-color: #f8fafc;
+                color: #0f172a;
+                font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
             }
             QLineEdit {
-                background-color: #1e293b;
-                border: 1px solid #334155;
+                background-color: #ffffff;
+                border: 1px solid #cbd5e1;
                 border-radius: 6px;
                 padding: 8px 12px;
-                color: #f8fafc;
+                color: #0f172a;
                 font-size: 13px;
             }
+            QLineEdit:focus {
+                border: 1px solid #2563eb;
+            }
             QTableView {
-                background-color: #1e293b;
-                border: 1px solid #334155;
+                background-color: #ffffff;
+                color: #1e293b;
+                border: 1px solid #e2e8f0;
                 border-radius: 8px;
-                gridline-color: #334155;
-                selection-background-color: #3b82f6;
+                gridline-color: #f1f5f9;
+                selection-background-color: #eff6ff;
+                selection-color: #1e40af;
+                font-size: 12px;
             }
             QHeaderView::section {
-                background-color: #334155;
-                color: #94a3b8;
-                font-weight: bold;
-                padding: 6px;
+                background-color: #f1f5f9;
+                color: #334155;
+                font-weight: 700;
+                font-size: 12px;
+                padding: 8px 10px;
                 border: none;
+                border-bottom: 2px solid #e2e8f0;
             }
             QPushButton {
-                padding: 6px 14px;
+                padding: 7px 14px;
                 border-radius: 6px;
                 font-size: 12px;
-                font-weight: bold;
+                font-weight: 600;
             }
         """)
 
         layout = QVBoxLayout(self)
-        layout.setContentsMargins(28, 20, 28, 20)
+        layout.setContentsMargins(32, 24, 32, 24)
         layout.setSpacing(14)
 
         # Header Title
         hdr_layout = QHBoxLayout()
         title_box = QVBoxLayout()
+        title_box.setSpacing(4)
         lbl_title = QLabel("Issue Explorer & Discrepancy Ledger")
-        lbl_title.setStyleSheet("font-size: 20px; font-weight: bold; color: #f8fafc;")
+        lbl_title.setStyleSheet("font-size: 22px; font-weight: 800; color: #0f172a;")
         title_box.addWidget(lbl_title)
 
         self.lbl_count = QLabel("0 records loaded")
-        self.lbl_count.setStyleSheet("font-size: 12px; color: #94a3b8;")
+        self.lbl_count.setStyleSheet("font-size: 13px; color: #64748b; font-weight: 500;")
         title_box.addWidget(self.lbl_count)
         hdr_layout.addLayout(title_box)
 
@@ -82,8 +91,8 @@ class IssueExplorerView(QWidget):
 
         # Search Bar
         self.txt_search = QLineEdit()
-        self.txt_search.setPlaceholderText("Search GSTIN, Supplier Name, or Invoice #...")
-        self.txt_search.setFixedWidth(320)
+        self.txt_search.setPlaceholderText("🔍  Search GSTIN, Supplier Name, or Invoice #...")
+        self.txt_search.setFixedWidth(340)
         self.txt_search.textChanged.connect(self._on_filter_changed)
         hdr_layout.addWidget(self.txt_search)
 
@@ -96,11 +105,11 @@ class IssueExplorerView(QWidget):
 
         filters = [
             ("All Records", "ALL"),
-            ("Matched", MatchStatus.MATCHED.value),
-            ("Differences", MatchStatus.MATCHED_WITH_DIFFERENCE.value),
-            ("Missing in 2B (Risk)", MatchStatus.MISSING_IN_SOURCE_A.value),
-            ("Unclaimed in Books", MatchStatus.MISSING_IN_SOURCE_B.value),
-            ("Duplicates", MatchStatus.DUPLICATE.value),
+            ("✓ Safe Matched", MatchStatus.MATCHED.value),
+            ("⚠ Tax Difference", MatchStatus.MATCHED_WITH_DIFFERENCE.value),
+            ("✕ Missing in 2B (Risk)", MatchStatus.MISSING_IN_SOURCE_A.value),
+            ("★ Unclaimed in Books", MatchStatus.MISSING_IN_SOURCE_B.value),
+            ("⚠ Duplicates", MatchStatus.DUPLICATE.value),
         ]
 
         self.current_filter = "ALL"
@@ -111,14 +120,21 @@ class IssueExplorerView(QWidget):
                 btn.setChecked(True)
             btn.setStyleSheet("""
                 QPushButton {
-                    background-color: #1e293b;
-                    color: #94a3b8;
-                    border: 1px solid #334155;
+                    background-color: #ffffff;
+                    color: #475569;
+                    border: 1px solid #cbd5e1;
+                    font-weight: 600;
+                    padding: 6px 12px;
+                }
+                QPushButton:hover {
+                    background-color: #f1f5f9;
+                    color: #0f172a;
                 }
                 QPushButton:checked {
-                    background-color: #3b82f6;
-                    color: white;
-                    border: 1px solid #3b82f6;
+                    background-color: #2563eb;
+                    color: #ffffff;
+                    border: 1px solid #2563eb;
+                    font-weight: 700;
                 }
             """)
             btn.clicked.connect(lambda checked, c=code: self._set_filter(c))
@@ -145,9 +161,11 @@ class IssueExplorerView(QWidget):
 
         # Bottom Hint Bar
         hint = QLabel(
-            "💡 Tip: Double-click any row to view Side-by-Side invoice field comparison and take resolution action."
+            "💡 <b>Accountant Pro-Tip:</b> Double-click any row to view full side-by-side field comparison and take resolution actions (e.g. Approved, Flagged, Under Review)."
         )
-        hint.setStyleSheet("color: #64748b; font-size: 11px;")
+        hint.setStyleSheet(
+            "color: #1e40af; font-size: 12px; background-color: #eff6ff; padding: 8px 12px; border-radius: 6px; border: 1px solid #bfdbfe;"
+        )
         layout.addWidget(hint)
 
     def load_summary(self, summary: ReconciliationSummary):

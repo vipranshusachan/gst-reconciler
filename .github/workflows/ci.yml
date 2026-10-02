@@ -86,7 +86,7 @@ jobs:
       uses: softprops/action-gh-release@v2
       with:
         files: |
-          dist/GSTReconciler-Setup-v1.0.0.exe
+          dist/GSTReconciler-Setup-*.exe
           GSTReconciler-Windows-x64.zip
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
