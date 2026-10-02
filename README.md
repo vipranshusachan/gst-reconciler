@@ -12,13 +12,14 @@
 
 ## ⚡ Super Easy Installation (Quick Start)
 
-### Option 1: Windows 1-Click Installer (For Accountants & Tax Professionals)
-*No Python or technical knowledge needed.*
+### Option 1: Direct Single-File .exe (Recommended for Clients & Accountants)
+*No installation, no zip extraction, no Python required!*
 
-1. Download the latest installer `GSTReconciler-Setup-v1.0.0.exe` from [GitHub Releases](https://github.com/vipranshusachan/gst-reconciler/releases).
-2. Double-click the downloaded setup file and follow the standard Windows setup wizard.
-3. Launch **GST Reconciler** directly from your Desktop or Start Menu.
-4. *(Optional)* Click **"Load Demo Sample"** inside the app to see immediate reconciliation results!
+1. **[Direct Download GSTReconciler.exe](https://github.com/vipranshusachan/gst-reconciler/releases/download/v1.0.0/GSTReconciler.exe)**
+2. Simply double-click **`GSTReconciler.exe`** and the application starts immediately!
+3. *(Optional)* Click **"Load Demo Sample"** inside the app to see immediate reconciliation results!
+
+*(Prefer a ZIP archive? Download [GSTReconciler-v1.0.0-windows-x64.zip](https://github.com/vipranshusachan/gst-reconciler/releases/download/v1.0.0/GSTReconciler-v1.0.0-windows-x64.zip))*
 
 ---
 
