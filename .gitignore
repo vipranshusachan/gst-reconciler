@@ -64,7 +64,8 @@ venv.bak/
 *.sqlite3
 *.log
 logs/
-data/
+/data/
+!demo/data/
 
 # IDE / Editor artifacts
 .vscode/
