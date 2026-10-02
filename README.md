@@ -12,14 +12,25 @@
 
 ## ⚡ Super Easy Installation (Quick Start)
 
-### Option 1: Direct Single-File .exe (Recommended for Clients & Accountants)
-*No installation, no zip extraction, no Python required!*
+### Option 1: Official Windows Installer (Recommended for Clients)
+*Standard Windows Setup with Desktop Shortcut and Start Menu icon!*
 
-1. **[Direct Download GSTReconciler.exe (v1.1.0 - Bright Clean UI)](https://github.com/vipranshusachan/gst-reconciler/releases/download/v1.1.0/GSTReconciler.exe)**
-2. Simply double-click **`GSTReconciler.exe`** and the application starts immediately!
-3. *(Optional)* Click **"Load Sample Demo"** inside the app to see immediate reconciliation results!
+1. **[Download GSTReconciler-Setup-v1.1.0.exe](https://github.com/vipranshusachan/gst-reconciler/releases/download/v1.1.0/GSTReconciler-Setup-v1.1.0.exe)**
+2. Double-click the installer and follow the standard installation wizard.
 
-*(Prefer a ZIP archive? Download [GSTReconciler-v1.1.0-windows-x64.zip](https://github.com/vipranshusachan/gst-reconciler/releases/download/v1.1.0/GSTReconciler-v1.1.0-windows-x64.zip))*
+---
+
+### Option 2: Direct Single-File .exe (No Installation Required)
+*Run directly without installing!*
+
+1. **[Download GSTReconciler.exe](https://github.com/vipranshusachan/gst-reconciler/releases/download/v1.1.0/GSTReconciler.exe)**
+2. **If Windows SmartScreen ("Windows protected your PC") appears:**
+   * Click **"More info"**
+   * Click **"Run anyway"**
+   *(Note: As an open-source tool without a corporate EV certificate, SmartScreen shows this blue box once. Clicking 'Run anyway' allows it permanently).*
+3. *(Alternative)* Download **[Run-GST-Reconciler.bat](https://github.com/vipranshusachan/gst-reconciler/releases/download/v1.1.0/Run-GST-Reconciler.bat)** in the same folder and double-click to start with zero warnings.
+
+*(Prefer a portable ZIP archive? Download [GSTReconciler-v1.1.0-windows-x64.zip](https://github.com/vipranshusachan/gst-reconciler/releases/download/v1.1.0/GSTReconciler-v1.1.0-windows-x64.zip))*
 
 ---
 
